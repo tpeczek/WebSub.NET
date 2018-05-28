@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <Copyright>Copyright © 2018 Tomasz Pęczek</Copyright>
+    <Authors>Tomasz Pęczek</Authors>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\WebSub.AspNetCore.WebHooks.Receivers.Subscriber\WebSub.AspNetCore.WebHooks.Receivers.Subscriber.csproj" />
+  </ItemGroup>
+</Project>
