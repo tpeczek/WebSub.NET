@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C0459CD6-0305-4671-BA3C-66A391F6D47C}"
+	ProjectSection(SolutionItems) = preProject
+		src\NuGet.Config = src\NuGet.Config
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSub.AspNetCore.WebHooks.Receivers.Subscriber", "src\WebSub.AspNetCore.WebHooks.Receivers.Subscriber\WebSub.AspNetCore.WebHooks.Receivers.Subscriber.csproj", "{0871A2E5-D032-41FF-99BE-71BB7715667C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0871A2E5-D032-41FF-99BE-71BB7715667C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0871A2E5-D032-41FF-99BE-71BB7715667C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0871A2E5-D032-41FF-99BE-71BB7715667C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0871A2E5-D032-41FF-99BE-71BB7715667C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0871A2E5-D032-41FF-99BE-71BB7715667C} = {C0459CD6-0305-4671-BA3C-66A391F6D47C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F3CB0910-00C8-439B-8A1D-E7C4F7DD0190}
+	EndGlobalSection
+EndGlobal
