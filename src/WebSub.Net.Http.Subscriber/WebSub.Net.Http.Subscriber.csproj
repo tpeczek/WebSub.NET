@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>WebSub subscriber.</Description>
+    <Copyright>Copyright © 2018 Tomasz Pęczek</Copyright>
+    <VersionPrefix>0.0.1-alpha</VersionPrefix>
+    <Authors>Tomasz Pęczek</Authors>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <AssemblyTitle>WebSub.Net.Http.Subscriber</AssemblyTitle>
+    <AssemblyName>WebSub.Net.Http.Subscriber</AssemblyName>
+    <PackageId>WebSub.Net.Http.Subscriber</PackageId>
+    <PackageTags></PackageTags>
+    <PackageProjectUrl>https://github.com/tpeczek/WebSub.NET</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/tpeczek/WebSub.NET/blob/master/LICENSE.md</PackageLicenseUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>git://github.com/tpeczek/WebSub.NET</RepositoryUrl>
+    <GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyProductAttribute>true</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>true</GenerateAssemblyCopyrightAttribute>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+</Project>
