@@ -1,10 +1,12 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace WebSub.Net.Http.Subscriber.Discovery
 {
-    internal class WebSubDiscoverer
+    internal class WebSubDiscoverer : IWebSubDiscoverer
     {
         #region Fields
         private const string LINK_HEADER = "Link";
@@ -20,11 +22,28 @@ namespace WebSub.Net.Http.Subscriber.Discovery
         #endregion
 
         #region Methods
-        public async Task<WebSubDiscovery> Discover(string requestUri, CancellationToken cancellationToken)
+        public async Task<WebSubDiscovery> DiscoverAsync(string requestUri, CancellationToken cancellationToken)
         {
-            HttpResponseMessage discoveryRequestResponse = await _httpClient.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+            HttpResponseMessage discoveryResponse = await _httpClient.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
 
-            return WebLinkParser.ParseWebLinkHeaders(discoveryRequestResponse.Headers.GetValues(LINK_HEADER));
+            if (discoveryResponse.StatusCode == HttpStatusCode.OK)
+            {
+                if (discoveryResponse.Headers.Contains(LINK_HEADER))
+                {
+                    WebSubDiscovery webSubDiscovery = WebLinkParser.ParseWebLinkHeaders(discoveryResponse.Headers.GetValues(LINK_HEADER));
+                    if (RequiredUrlsIdentified(webSubDiscovery))
+                    {
+                        return webSubDiscovery;
+                    }
+                }
+            }
+
+            throw new WebSubDiscoveryException("The discovery mechanism haven't identified required URLs.", discoveryResponse);
+        }
+
+        private static bool RequiredUrlsIdentified(WebSubDiscovery webSubDiscovery)
+        {
+            return !String.IsNullOrWhiteSpace(webSubDiscovery.TopicUrl) && (webSubDiscovery.HubsUrls != null) && (webSubDiscovery.HubsUrls.Count > 0);
         }
         #endregion
     }

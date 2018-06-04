@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace WebSub.Net.Http.Subscriber.Discovery
 {
     internal struct WebSubDiscovery
     {
-        public bool Identified
-        {
-            get { return !String.IsNullOrWhiteSpace(Topic) && (Hubs != null) && (Hubs.Count > 0); }
-        }
+        public string TopicUrl { get; set; }
 
-        public string Topic { get; set; }
-
-        public List<string> Hubs { get; set; }
+        public List<string> HubsUrls { get; set; }
     }
 }

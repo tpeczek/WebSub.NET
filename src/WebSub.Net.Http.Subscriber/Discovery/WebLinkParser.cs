@@ -122,21 +122,21 @@ namespace WebSub.Net.Http.Subscriber.Discovery
 
             if (rel == HUB_RELATION)
             {
-                if (webSubDiscovery.Hubs == null)
+                if (webSubDiscovery.HubsUrls == null)
                 {
-                    webSubDiscovery.Hubs = new List<string>();
+                    webSubDiscovery.HubsUrls = new List<string>();
                 }
 
-                webSubDiscovery.Hubs.Add(url);
+                webSubDiscovery.HubsUrls.Add(url);
             }
             else if (rel == TOPIC_RELATION)
             {
-                if (!String.IsNullOrWhiteSpace(webSubDiscovery.Topic))
+                if (!String.IsNullOrWhiteSpace(webSubDiscovery.TopicUrl))
                 {
                     throw new WebSubDiscoveryException("Multiple canonical URLs for the topic have been found.");
                 }
 
-                webSubDiscovery.Topic = url;
+                webSubDiscovery.TopicUrl = url;
             }
 
 

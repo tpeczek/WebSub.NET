@@ -21,43 +21,41 @@ namespace Test.WebSub.Net.Http.Subscriber.WebSubRocks
 
         #region Tests
         [Fact]
-        public async void DiscoverFromHttpHeader_Discovers()
+        public async void Discover_InvalidDiscoveryUrl_ThrowsWebSubDiscoveryException()
         {
             WebSubDiscoverer webSubRocksWebSubDiscoverer = PrepareWebSubRocksWebSubDiscoverer();
 
-            WebSubDiscovery webSubRocksWebSubDiscovery = await webSubRocksWebSubDiscoverer.Discover(WebSubRocksConstants.HTTP_HEADER_DISCOVERY_URL, CancellationToken.None);
-
-            Assert.True(webSubRocksWebSubDiscovery.Identified);
+            await Assert.ThrowsAsync<WebSubDiscoveryException>(() => webSubRocksWebSubDiscoverer.DiscoverAsync(WebSubRocksConstants.INVALID_DISCOVERY_URL, CancellationToken.None));
         }
 
         [Fact]
-        public async void DiscoverFromHttpHeader_DiscoversSingleHub()
+        public async void Discover_HttpHeaderDiscoveryUrl_DiscoversSingleHub()
         {
             WebSubDiscoverer webSubRocksWebSubDiscoverer = PrepareWebSubRocksWebSubDiscoverer();
 
-            WebSubDiscovery webSubRocksWebSubDiscovery = await webSubRocksWebSubDiscoverer.Discover(WebSubRocksConstants.HTTP_HEADER_DISCOVERY_URL, CancellationToken.None);
+            WebSubDiscovery webSubRocksWebSubDiscovery = await webSubRocksWebSubDiscoverer.DiscoverAsync(WebSubRocksConstants.HTTP_HEADER_DISCOVERY_URL, CancellationToken.None);
 
-            Assert.Single(webSubRocksWebSubDiscovery.Hubs);
+            Assert.Single(webSubRocksWebSubDiscovery.HubsUrls);
         }
 
         [Fact]
-        public async Task DiscoverFromHttpHeader_DiscoversCorrectHub()
+        public async Task Discover_HttpHeaderDiscoveryUrl_DiscoversCorrectHub()
         {
             WebSubDiscoverer webSubRocksWebSubDiscoverer = PrepareWebSubRocksWebSubDiscoverer();
 
-            WebSubDiscovery webSubRocksWebSubDiscovery = await webSubRocksWebSubDiscoverer.Discover(WebSubRocksConstants.HTTP_HEADER_DISCOVERY_URL, CancellationToken.None);
+            WebSubDiscovery webSubRocksWebSubDiscovery = await webSubRocksWebSubDiscoverer.DiscoverAsync(WebSubRocksConstants.HTTP_HEADER_DISCOVERY_URL, CancellationToken.None);
 
-            Assert.Contains(WebSubRocksConstants.HTTP_HEADER_DISCOVERY_HUB, webSubRocksWebSubDiscovery.Hubs);
+            Assert.Contains(WebSubRocksConstants.HTTP_HEADER_DISCOVERY_HUB_URL, webSubRocksWebSubDiscovery.HubsUrls);
         }
 
         [Fact]
-        public async Task DiscoverFromHttpHeader_DiscoversCorrectTopic()
+        public async Task Discover_HttpHeaderDiscoveryUrl_DiscoversCorrectTopic()
         {
             WebSubDiscoverer webSubRocksWebSubDiscoverer = PrepareWebSubRocksWebSubDiscoverer();
 
-            WebSubDiscovery webSubRocksWebSubDiscovery = await webSubRocksWebSubDiscoverer.Discover(WebSubRocksConstants.HTTP_HEADER_DISCOVERY_URL, CancellationToken.None);
+            WebSubDiscovery webSubRocksWebSubDiscovery = await webSubRocksWebSubDiscoverer.DiscoverAsync(WebSubRocksConstants.HTTP_HEADER_DISCOVERY_URL, CancellationToken.None);
 
-            Assert.Equal(WebSubRocksConstants.HTTP_HEADER_DISCOVERY_TOPIC, webSubRocksWebSubDiscovery.Topic);
+            Assert.Equal(WebSubRocksConstants.HTTP_HEADER_DISCOVERY_TOPIC_URL, webSubRocksWebSubDiscovery.TopicUrl);
         }
         #endregion
     }

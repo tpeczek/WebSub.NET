@@ -9,5 +9,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\WebSub.AspNetCore.WebHooks.Receivers.Subscriber\WebSub.AspNetCore.WebHooks.Receivers.Subscriber.csproj" />
+    <ProjectReference Include="..\..\src\WebSub.Net.Http.Subscriber\WebSub.Net.Http.Subscriber.csproj" />
   </ItemGroup>
 </Project>
