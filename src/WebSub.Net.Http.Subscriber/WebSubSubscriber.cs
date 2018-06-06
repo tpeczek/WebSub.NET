@@ -66,6 +66,7 @@ namespace WebSub.Net.Http.Subscriber
             }
 
             WebSubDiscovery discovery = await _webSubDiscoverer.DiscoverAsync(parameters.ContentUrl, cancellationToken);
+            await CallOnDiscovered(parameters, discovery, cancellationToken);
 
             string subscriptionHubUrl = null;
             Dictionary<string, HttpResponseMessage> hubsResponses = new Dictionary<string, HttpResponseMessage>();
@@ -88,6 +89,16 @@ namespace WebSub.Net.Http.Subscriber
             }
 
             return new WebSubSubscription(discovery.TopicUrl, subscriptionHubUrl);
+        }
+
+        private static async Task CallOnDiscovered(WebSubSubscribeParameters parameters, WebSubDiscovery discovery, CancellationToken cancellationToken)
+        {
+            parameters.OnDiscovered?.Invoke(discovery);
+            
+            if (parameters.OnDiscoveredAsync != null)
+            {
+                await parameters.OnDiscoveredAsync(discovery, cancellationToken);
+            }
         }
 
         private static FormUrlEncodedContent PrepareSubscribeRequestContent(string topicUrl, WebSubSubscribeParameters parameters)

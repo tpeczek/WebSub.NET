@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{3F3D32A7-4
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.WebSub.Net.Http.Subscriber", "test\Test.WebSub.Net.Http.Subscriber\Test.WebSub.Net.Http.Subscriber.csproj", "{EFC944C4-6195-43D2-89B3-F24AAFBF403D}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSub.AspNetCore.Services.Abstractions", "src\WebSub.AspNetCore.Services.Abstractions\WebSub.AspNetCore.Services.Abstractions.csproj", "{AF4B4EC1-BD2D-4E5A-93DD-44C889699872}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{EFC944C4-6195-43D2-89B3-F24AAFBF403D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EFC944C4-6195-43D2-89B3-F24AAFBF403D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EFC944C4-6195-43D2-89B3-F24AAFBF403D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF4B4EC1-BD2D-4E5A-93DD-44C889699872}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF4B4EC1-BD2D-4E5A-93DD-44C889699872}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF4B4EC1-BD2D-4E5A-93DD-44C889699872}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF4B4EC1-BD2D-4E5A-93DD-44C889699872}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +54,7 @@ Global
 		{EE496B1B-00B2-48EA-ACF7-002DCCBCE16B} = {E9DE4F00-A9FE-416D-9C86-419EF0C0B9E1}
 		{6BB4E937-3FB2-4DCF-AA19-56757231A872} = {C0459CD6-0305-4671-BA3C-66A391F6D47C}
 		{EFC944C4-6195-43D2-89B3-F24AAFBF403D} = {3F3D32A7-4559-4FFC-895A-63B2B85C6909}
+		{AF4B4EC1-BD2D-4E5A-93DD-44C889699872} = {C0459CD6-0305-4671-BA3C-66A391F6D47C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F3CB0910-00C8-439B-8A1D-E7C4F7DD0190}

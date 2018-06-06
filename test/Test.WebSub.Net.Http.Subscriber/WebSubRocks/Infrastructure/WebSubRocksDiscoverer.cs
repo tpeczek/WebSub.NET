@@ -25,11 +25,13 @@ namespace Test.WebSub.Net.Http.Subscriber.WebSubRocks.Infrastructure
 
         private static Task<WebSubDiscovery> GetHttpHeaderWebSubDiscovery()
         {
-            return Task.FromResult(new WebSubDiscovery
+            WebSubDiscovery webSubDiscovery = new WebSubDiscovery
             {
-                TopicUrl = WebSubRocksConstants.HTTP_HEADER_DISCOVERY_TOPIC_URL,
-                HubsUrls = new List<string> { WebSubRocksConstants.HTTP_HEADER_DISCOVERY_HUB_URL }
-            });
+                TopicUrl = WebSubRocksConstants.HTTP_HEADER_DISCOVERY_TOPIC_URL
+            };
+            webSubDiscovery.AddHubUrl(WebSubRocksConstants.HTTP_HEADER_DISCOVERY_HUB_URL);
+
+            return Task.FromResult(webSubDiscovery);
         }
     }
 }

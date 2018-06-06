@@ -1,3 +1,4 @@
+using Demo.AspNetCore.WebSub.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -12,6 +13,7 @@ namespace Demo.AspNetCore.WebSub
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHttpClient<WebSubSubscriber>();
+            services.AddWebSubSubscriptionStore<MemoryWebSubSubscriptionsStore>();
             services.AddMvc()
                 .AddWebSubWebHooks()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);

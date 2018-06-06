@@ -122,12 +122,7 @@ namespace WebSub.Net.Http.Subscriber.Discovery
 
             if (rel == HUB_RELATION)
             {
-                if (webSubDiscovery.HubsUrls == null)
-                {
-                    webSubDiscovery.HubsUrls = new List<string>();
-                }
-
-                webSubDiscovery.HubsUrls.Add(url);
+                webSubDiscovery.AddHubUrl(url);
             }
             else if (rel == TOPIC_RELATION)
             {

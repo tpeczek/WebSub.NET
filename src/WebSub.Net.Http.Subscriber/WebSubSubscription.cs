@@ -5,7 +5,7 @@ namespace WebSub.Net.Http.Subscriber
     /// <summary>
     /// A WebSub subscription.
     /// </summary>
-    public struct WebSubSubscription
+    public readonly struct WebSubSubscription
     {
         #region Properties
         /// <summary>

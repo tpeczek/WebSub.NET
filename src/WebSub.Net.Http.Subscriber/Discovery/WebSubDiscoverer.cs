@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -43,7 +44,7 @@ namespace WebSub.Net.Http.Subscriber.Discovery
 
         private static bool RequiredUrlsIdentified(WebSubDiscovery webSubDiscovery)
         {
-            return !String.IsNullOrWhiteSpace(webSubDiscovery.TopicUrl) && (webSubDiscovery.HubsUrls != null) && (webSubDiscovery.HubsUrls.Count > 0);
+            return !String.IsNullOrWhiteSpace(webSubDiscovery.TopicUrl) && (webSubDiscovery.HubsUrls != null) && (webSubDiscovery.HubsUrls.Any());
         }
         #endregion
     }

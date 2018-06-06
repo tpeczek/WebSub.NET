@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using WebSub.Net.Http.Subscriber.Discovery;
 
 namespace WebSub.Net.Http.Subscriber
 {
@@ -58,6 +61,16 @@ namespace WebSub.Net.Http.Subscriber
                 _secret = value;
             }
         }
+
+        /// <summary>
+        /// Called after the topic and hubs URLs have been discovered.
+        /// </summary>
+        public Action<WebSubDiscovery> OnDiscovered { get; set; }
+
+        /// <summary>
+        /// Called after the topic and hubs URLs have been discovered.
+        /// </summary>
+        public Func<WebSubDiscovery, CancellationToken, Task> OnDiscoveredAsync { get; set; }
         #endregion
 
         #region Constructor
