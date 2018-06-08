@@ -24,4 +24,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.WebHooks.Receivers" Version="1.0.0-preview3-final" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WebSub.AspNetCore.Services.Abstractions\WebSub.AspNetCore.Services.Abstractions.csproj" />
+  </ItemGroup>
 </Project>

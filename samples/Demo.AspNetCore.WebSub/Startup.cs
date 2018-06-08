@@ -1,10 +1,12 @@
-using Demo.AspNetCore.WebSub.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Lib.AspNetCore.ServerSentEvents;
+using WebSub.AspNetCore.Services;
 using WebSub.Net.Http.Subscriber;
+using Demo.AspNetCore.WebSub.Services;
 
 namespace Demo.AspNetCore.WebSub
 {
@@ -13,7 +15,12 @@ namespace Demo.AspNetCore.WebSub
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHttpClient<WebSubSubscriber>();
+
+            services.AddServerSentEvents();
+
             services.AddWebSubSubscriptionStore<MemoryWebSubSubscriptionsStore>();
+            services.AddSingleton<IWebSubSubscriptionsService, ServerSentEventWebSubSubscriptionsService>();
+
             services.AddMvc()
                 .AddWebSubWebHooks()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
@@ -25,6 +32,8 @@ namespace Demo.AspNetCore.WebSub
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.MapServerSentEvents("/sse/webhooks/incoming/websub");
 
             app.UseStaticFiles();
 

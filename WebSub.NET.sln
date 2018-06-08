@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.WebSub.Net.Http.Subscr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSub.AspNetCore.Services.Abstractions", "src\WebSub.AspNetCore.Services.Abstractions\WebSub.AspNetCore.Services.Abstractions.csproj", "{AF4B4EC1-BD2D-4E5A-93DD-44C889699872}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber", "test\Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber\Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.csproj", "{EB76A23D-391A-4763-B762-45014F4A5C26}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{AF4B4EC1-BD2D-4E5A-93DD-44C889699872}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF4B4EC1-BD2D-4E5A-93DD-44C889699872}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF4B4EC1-BD2D-4E5A-93DD-44C889699872}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB76A23D-391A-4763-B762-45014F4A5C26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB76A23D-391A-4763-B762-45014F4A5C26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB76A23D-391A-4763-B762-45014F4A5C26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB76A23D-391A-4763-B762-45014F4A5C26}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,6 +61,7 @@ Global
 		{6BB4E937-3FB2-4DCF-AA19-56757231A872} = {C0459CD6-0305-4671-BA3C-66A391F6D47C}
 		{EFC944C4-6195-43D2-89B3-F24AAFBF403D} = {3F3D32A7-4559-4FFC-895A-63B2B85C6909}
 		{AF4B4EC1-BD2D-4E5A-93DD-44C889699872} = {C0459CD6-0305-4671-BA3C-66A391F6D47C}
+		{EB76A23D-391A-4763-B762-45014F4A5C26} = {3F3D32A7-4559-4FFC-895A-63B2B85C6909}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F3CB0910-00C8-439B-8A1D-E7C4F7DD0190}

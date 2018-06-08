@@ -1,5 +1,7 @@
 using System;
 using Microsoft.AspNetCore.WebHooks.Metadata;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters;
 using WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Metadata;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -21,6 +23,7 @@ namespace Microsoft.Extensions.DependencyInjection
             }
 
             WebHookMetadata.Register<WebSubMetadata>(services);
+            services.TryAddSingleton<WebSubWebHookIntentVerificationFilter>();
         }
     }
 }

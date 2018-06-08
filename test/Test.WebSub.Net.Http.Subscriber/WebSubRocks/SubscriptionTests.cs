@@ -46,7 +46,7 @@ namespace Test.WebSub.Net.Http.Subscriber.WebSubRocks
             return webSubRocksDiscovererMock;
         }
 
-        private WebSubSubscriber PrepareWebSubRocksWebSubDiscoverer(HttpClient webSubRocksHttpClient = null, IWebSubDiscoverer webSubRocksDiscoverer = null)
+        private WebSubSubscriber PrepareWebSubRocksWebSubSubscriber(HttpClient webSubRocksHttpClient = null, IWebSubDiscoverer webSubRocksDiscoverer = null)
         {
             webSubRocksHttpClient = webSubRocksHttpClient ?? new HttpClient(new WebSubRocksHttpMessageHandler());
             webSubRocksDiscoverer = webSubRocksDiscoverer ?? new WebSubRocksDiscoverer();
@@ -60,7 +60,7 @@ namespace Test.WebSub.Net.Http.Subscriber.WebSubRocks
         public async void Subscribe_CallsDiscoverWithContentUrl()
         {
             Mock<IWebSubDiscoverer> webSubRocksDiscovererMock = PrepareWebSubRocksDiscovererMock();
-            WebSubSubscriber webSubSubscriber = PrepareWebSubRocksWebSubDiscoverer(webSubRocksDiscoverer: webSubRocksDiscovererMock.Object);
+            WebSubSubscriber webSubSubscriber = PrepareWebSubRocksWebSubSubscriber(webSubRocksDiscoverer: webSubRocksDiscovererMock.Object);
 
             WebSubSubscription webSubSubscription = await webSubSubscriber.SubscribeAsync(new WebSubSubscribeParameters(WebSubRocksConstants.HTTP_HEADER_DISCOVERY_URL, WebSubRocksConstants.WEBHOOK_URL), CancellationToken.None);
 
@@ -71,7 +71,7 @@ namespace Test.WebSub.Net.Http.Subscriber.WebSubRocks
         public async void Subscribe_HttpHeaderDiscoveryUrl_PostsToHttpHeaderDiscoveryHubUrl()
         {
             Mock<HttpClient> webSubRocksHttpClientMock = PrepareWebSubRocksHttpClientMock();
-            WebSubSubscriber webSubSubscriber = PrepareWebSubRocksWebSubDiscoverer(webSubRocksHttpClientMock.Object);
+            WebSubSubscriber webSubSubscriber = PrepareWebSubRocksWebSubSubscriber(webSubRocksHttpClientMock.Object);
 
             WebSubSubscription webSubSubscription = await webSubSubscriber.SubscribeAsync(new WebSubSubscribeParameters(WebSubRocksConstants.HTTP_HEADER_DISCOVERY_URL, WebSubRocksConstants.WEBHOOK_URL), CancellationToken.None);
 
@@ -82,7 +82,7 @@ namespace Test.WebSub.Net.Http.Subscriber.WebSubRocks
         public async void Subscribe_HttpHeaderDiscoveryUrl_HubModeParameterEqualsSubscribe()
         {
             Mock<HttpClient> webSubRocksHttpClientMock = PrepareWebSubRocksHttpClientMock();
-            WebSubSubscriber webSubSubscriber = PrepareWebSubRocksWebSubDiscoverer(webSubRocksHttpClientMock.Object);
+            WebSubSubscriber webSubSubscriber = PrepareWebSubRocksWebSubSubscriber(webSubRocksHttpClientMock.Object);
 
             WebSubSubscription webSubSubscription = await webSubSubscriber.SubscribeAsync(new WebSubSubscribeParameters(WebSubRocksConstants.HTTP_HEADER_DISCOVERY_URL, WebSubRocksConstants.WEBHOOK_URL), CancellationToken.None);
 
@@ -93,7 +93,7 @@ namespace Test.WebSub.Net.Http.Subscriber.WebSubRocks
         public async void Subscribe_HttpHeaderDiscoveryUrl_HubTopicParameterEqualsHttpHeaderDiscoveryTopicUrl()
         {
             Mock<HttpClient> webSubRocksHttpClientMock = PrepareWebSubRocksHttpClientMock();
-            WebSubSubscriber webSubSubscriber = PrepareWebSubRocksWebSubDiscoverer(webSubRocksHttpClientMock.Object);
+            WebSubSubscriber webSubSubscriber = PrepareWebSubRocksWebSubSubscriber(webSubRocksHttpClientMock.Object);
 
             WebSubSubscription webSubSubscription = await webSubSubscriber.SubscribeAsync(new WebSubSubscribeParameters(WebSubRocksConstants.HTTP_HEADER_DISCOVERY_URL, WebSubRocksConstants.WEBHOOK_URL), CancellationToken.None);
 
@@ -104,7 +104,7 @@ namespace Test.WebSub.Net.Http.Subscriber.WebSubRocks
         public async void Subscribe_HttpHeaderDiscoveryUrl_HubCallbackParameterEqualsWebHookUrl()
         {
             Mock<HttpClient> webSubRocksHttpClientMock = PrepareWebSubRocksHttpClientMock();
-            WebSubSubscriber webSubSubscriber = PrepareWebSubRocksWebSubDiscoverer(webSubRocksHttpClientMock.Object);
+            WebSubSubscriber webSubSubscriber = PrepareWebSubRocksWebSubSubscriber(webSubRocksHttpClientMock.Object);
 
             WebSubSubscription webSubSubscription = await webSubSubscriber.SubscribeAsync(new WebSubSubscribeParameters(WebSubRocksConstants.HTTP_HEADER_DISCOVERY_URL, WebSubRocksConstants.WEBHOOK_URL), CancellationToken.None);
 
@@ -115,7 +115,7 @@ namespace Test.WebSub.Net.Http.Subscriber.WebSubRocks
         public async void Subscribe_HttpHeaderDiscoveryUrlNoLeaseSeconds_HubLeaseSecondsParameterNotPresent()
         {
             Mock<HttpClient> webSubRocksHttpClientMock = PrepareWebSubRocksHttpClientMock();
-            WebSubSubscriber webSubSubscriber = PrepareWebSubRocksWebSubDiscoverer(webSubRocksHttpClientMock.Object);
+            WebSubSubscriber webSubSubscriber = PrepareWebSubRocksWebSubSubscriber(webSubRocksHttpClientMock.Object);
 
             WebSubSubscription webSubSubscription = await webSubSubscriber.SubscribeAsync(new WebSubSubscribeParameters(WebSubRocksConstants.HTTP_HEADER_DISCOVERY_URL, WebSubRocksConstants.WEBHOOK_URL), CancellationToken.None);
 
@@ -126,7 +126,7 @@ namespace Test.WebSub.Net.Http.Subscriber.WebSubRocks
         public async void Subscribe_HttpHeaderDiscoveryUrlWithLeaseSeconds_HubLeaseSecondsParameterEqualsLeaseSeconds()
         {
             Mock<HttpClient> webSubRocksHttpClientMock = PrepareWebSubRocksHttpClientMock();
-            WebSubSubscriber webSubSubscriber = PrepareWebSubRocksWebSubDiscoverer(webSubRocksHttpClientMock.Object);
+            WebSubSubscriber webSubSubscriber = PrepareWebSubRocksWebSubSubscriber(webSubRocksHttpClientMock.Object);
 
             WebSubSubscription webSubSubscription = await webSubSubscriber.SubscribeAsync(new WebSubSubscribeParameters(WebSubRocksConstants.HTTP_HEADER_DISCOVERY_URL, WebSubRocksConstants.WEBHOOK_URL) { LeaseSeconds = LEASE_SECONDS }, CancellationToken.None);
 
@@ -137,7 +137,7 @@ namespace Test.WebSub.Net.Http.Subscriber.WebSubRocks
         public async void Subscribe_HttpHeaderDiscoveryUrlNoSecret_HubSecretParameterNotPresent()
         {
             Mock<HttpClient> webSubRocksHttpClientMock = PrepareWebSubRocksHttpClientMock();
-            WebSubSubscriber webSubSubscriber = PrepareWebSubRocksWebSubDiscoverer(webSubRocksHttpClientMock.Object);
+            WebSubSubscriber webSubSubscriber = PrepareWebSubRocksWebSubSubscriber(webSubRocksHttpClientMock.Object);
 
             WebSubSubscription webSubSubscription = await webSubSubscriber.SubscribeAsync(new WebSubSubscribeParameters(WebSubRocksConstants.HTTP_HEADER_DISCOVERY_URL, WebSubRocksConstants.WEBHOOK_URL), CancellationToken.None);
 
@@ -148,7 +148,7 @@ namespace Test.WebSub.Net.Http.Subscriber.WebSubRocks
         public async void Subscribe_HttpHeaderDiscoveryUrlWithSecret_HubSecretParameterEqualsSecret()
         {
             Mock<HttpClient> webSubRocksHttpClientMock = PrepareWebSubRocksHttpClientMock();
-            WebSubSubscriber webSubSubscriber = PrepareWebSubRocksWebSubDiscoverer(webSubRocksHttpClientMock.Object);
+            WebSubSubscriber webSubSubscriber = PrepareWebSubRocksWebSubSubscriber(webSubRocksHttpClientMock.Object);
 
             WebSubSubscription webSubSubscription = await webSubSubscriber.SubscribeAsync(new WebSubSubscribeParameters(WebSubRocksConstants.HTTP_HEADER_DISCOVERY_URL, WebSubRocksConstants.WEBHOOK_URL) { Secret = SECRET }, CancellationToken.None);
 
