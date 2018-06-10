@@ -6,9 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Lib.AspNetCore.ServerSentEvents;
 using WebSub.AspNetCore.Services;
 using WebSub.Net.Http.Subscriber;
-using Demo.AspNetCore.WebSub.Services;
+using Demo.AspNetCore.WebSub.Subscriber.Services;
 
-namespace Demo.AspNetCore.WebSub
+namespace Demo.AspNetCore.WebSub.Subscriber
 {
     public class Startup
     {
@@ -44,7 +44,7 @@ namespace Demo.AspNetCore.WebSub
 
             app.Run(async (context) =>
             {
-                await context.Response.WriteAsync("-- Demo.AspNetCore.WebSub --");
+                await context.Response.WriteAsync("-- Demo.AspNetCore.WebSub.Subscriber --");
             });
         }
     }

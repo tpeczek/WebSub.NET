@@ -83,7 +83,7 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
                     case WebSubConstants.INTENT_VERIFICATION_MODE_DENIED:
                         break;
                     case WebSubConstants.INTENT_VERIFICATION_MODE_SUBSCRIBE:
-                        intentVerificationResult = await HandleSubscribeIntentVerification(subscription, subscriptionsStore, subscriptionsService, requestQuery);
+                        intentVerificationResult = await HandleSubscribeIntentVerificationAsync(subscription, subscriptionsStore, subscriptionsService, requestQuery);
                         break;
                     case WebSubConstants.INTENT_VERIFICATION_MODE_UNSUBSCRIBE:
                         break;
@@ -96,7 +96,7 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
             return intentVerificationResult;
         }
 
-        private async Task<IActionResult> HandleSubscribeIntentVerification(WebSubSubscription subscription, IWebSubSubscriptionsStore subscriptionsStore, IWebSubSubscriptionsService subscriptionsService, IQueryCollection requestQuery)
+        private async Task<IActionResult> HandleSubscribeIntentVerificationAsync(WebSubSubscription subscription, IWebSubSubscriptionsStore subscriptionsStore, IWebSubSubscriptionsService subscriptionsService, IQueryCollection requestQuery)
         {
             StringValues topicValues = requestQuery[WebSubConstants.INTENT_VERIFICATION_TOPIC_QUERY_PARAMETER_NAME];
             if (StringValues.IsNullOrEmpty(topicValues))
@@ -116,7 +116,7 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
                 return HandleMissingIntentVerificationParameter(WebSubConstants.INTENT_VERIFICATION_CHALLENGE_QUERY_PARAMETER_NAME);
             }
 
-            if (await VerifySubscribeIntent(subscription, subscriptionsStore, subscriptionsService, topicValues, leaseSeconds))
+            if (await VerifySubscribeIntentAsync(subscription, subscriptionsStore, subscriptionsService, topicValues, leaseSeconds))
             {
                 _logger.LogInformation("Received a subscribe intent verification request for the '{ReceiverName}' WebHook receiver -- verification passed, returning challenge response.", WebSubConstants.ReceiverName);
                 return new ContentResult { Content = challengeValues };
@@ -128,7 +128,7 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
             }
         }
 
-        private async Task<bool> VerifySubscribeIntent(WebSubSubscription subscription, IWebSubSubscriptionsStore subscriptionsStore, IWebSubSubscriptionsService subscriptionsService, string topic, int leaseSeconds)
+        private async Task<bool> VerifySubscribeIntentAsync(WebSubSubscription subscription, IWebSubSubscriptionsStore subscriptionsStore, IWebSubSubscriptionsService subscriptionsService, string topic, int leaseSeconds)
         {
             bool verified = false;
 

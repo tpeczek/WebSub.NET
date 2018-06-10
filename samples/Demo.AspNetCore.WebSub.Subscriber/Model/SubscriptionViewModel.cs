@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using WebSub.AspNetCore.Services;
 
-namespace Demo.AspNetCore.WebSub.Model
+namespace Demo.AspNetCore.WebSub.Subscriber.Model
 {
     public class SubscriptionViewModel
     {

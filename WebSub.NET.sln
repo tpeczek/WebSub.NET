@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSub.AspNetCore.WebHooks.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{E9DE4F00-A9FE-416D-9C86-419EF0C0B9E1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.AspNetCore.WebSub", "samples\Demo.AspNetCore.WebSub\Demo.AspNetCore.WebSub.csproj", "{EE496B1B-00B2-48EA-ACF7-002DCCBCE16B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.AspNetCore.WebSub.Subscriber", "samples\Demo.AspNetCore.WebSub.Subscriber\Demo.AspNetCore.WebSub.Subscriber.csproj", "{EE496B1B-00B2-48EA-ACF7-002DCCBCE16B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSub.Net.Http.Subscriber", "src\WebSub.Net.Http.Subscriber\WebSub.Net.Http.Subscriber.csproj", "{6BB4E937-3FB2-4DCF-AA19-56757231A872}"
 EndProject

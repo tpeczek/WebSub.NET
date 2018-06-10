@@ -2,7 +2,7 @@
 using Lib.AspNetCore.ServerSentEvents;
 using WebSub.AspNetCore.Services;
 
-namespace Demo.AspNetCore.WebSub.Services
+namespace Demo.AspNetCore.WebSub.Subscriber.Services
 {
     internal class ServerSentEventWebSubSubscriptionsService : IWebSubSubscriptionsService
     {

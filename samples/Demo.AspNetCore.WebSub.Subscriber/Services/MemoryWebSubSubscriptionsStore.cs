@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using WebSub.AspNetCore.Services;
 
-namespace Demo.AspNetCore.WebSub.Services
+namespace Demo.AspNetCore.WebSub.Subscriber.Services
 {
     internal class MemoryWebSubSubscriptionsStore : WebSubSubscriptionStoreBase
     {

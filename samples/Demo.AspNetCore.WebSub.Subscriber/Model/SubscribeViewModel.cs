@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Demo.AspNetCore.WebSub.Model
+namespace Demo.AspNetCore.WebSub.Subscriber.Model
 {
     public class SubscribeViewModel
     {
