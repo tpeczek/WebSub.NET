@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.WebHooks;
 using Microsoft.AspNetCore.WebHooks.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -15,7 +16,7 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
     /// <summary>
     /// An <see cref="IResourceFilter"/> to verify the topic URL and short-circuit hub intent of subscriber verification request.
     /// </summary>
-    internal class WebSubWebHookIntentVerificationFilter : IAsyncResourceFilter, IOrderedFilter
+    internal class WebSubWebHookIntentVerificationFilter : IAsyncResourceFilter, IOrderedFilter, IWebHookReceiver
     {
         #region Fields
         private readonly ILogger _logger;
@@ -26,6 +27,11 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
         /// Gets the order value for determining the order of execution of filters. Filters execute in ascending numeric value of the <see cref="Order"/> property.
         /// </summary>
         public int Order => WebHookGetHeadRequestFilter.Order;
+
+        /// <summary>
+        /// Gets the case-insensitive name of the WebHook generator that this receiver supports.
+        /// </summary>
+        public string ReceiverName => WebSubConstants.ReceiverName;
         #endregion
 
         #region Constructor
@@ -44,6 +50,21 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Gets an indication that this <see cref="IWebHookReceiver"/> should execute in the current request.
+        /// </summary>
+        /// <param name="receiverName">The name of an available <see cref="IWebHookReceiver"/>.</param>
+        /// <returns><see langword="true"/> if this <see cref="IWebHookReceiver"/> should execute; <see langword="false"/> otherwise.</returns>
+        public bool IsApplicable(string receiverName)
+        {
+            if (receiverName == null)
+            {
+                throw new ArgumentNullException(nameof(receiverName));
+            }
+
+            return String.Equals(ReceiverName, receiverName, StringComparison.OrdinalIgnoreCase);
+        }
+
         /// <summary>
         /// Called asynchronously before the rest of the pipeline.
         /// </summary>
@@ -110,10 +131,10 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
                 return HandleMissingIntentVerificationParameter(WebSubConstants.INTENT_VERIFICATION_CHALLENGE_QUERY_PARAMETER_NAME);
             }
 
-            StringValues leaseSecondsValues = requestQuery[WebSubConstants.INTENT_VERIFICATION_CHALLENGE_QUERY_PARAMETER_NAME];
-            if (StringValues.IsNullOrEmpty(leaseSecondsValues) || Int32.TryParse(leaseSecondsValues, out int leaseSeconds))
+            StringValues leaseSecondsValues = requestQuery[WebSubConstants.INTENT_VERIFICATION_LEASE_SECONDS_QUERY_PARAMETER_NAME];
+            if (StringValues.IsNullOrEmpty(leaseSecondsValues) || !Int32.TryParse(leaseSecondsValues, out int leaseSeconds))
             {
-                return HandleMissingIntentVerificationParameter(WebSubConstants.INTENT_VERIFICATION_CHALLENGE_QUERY_PARAMETER_NAME);
+                return HandleMissingIntentVerificationParameter(WebSubConstants.INTENT_VERIFICATION_LEASE_SECONDS_QUERY_PARAMETER_NAME);
             }
 
             if (await VerifySubscribeIntentAsync(subscription, subscriptionsStore, subscriptionsService, topicValues, leaseSeconds))
@@ -136,7 +157,10 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
             {
                 if (subscription.TopicUrl != topic)
                 {
-                    await subscriptionsService?.OnInvalidSubscribeIntentVerificationAsync(subscription, subscriptionsStore);
+                    if (subscriptionsService != null)
+                    {
+                        await subscriptionsService.OnInvalidSubscribeIntentVerificationAsync(subscription, subscriptionsStore);
+                    }
                 }
                 else if ((subscriptionsService == null) || (await subscriptionsService.OnSubscribeIntentVerificationAsync(subscription, subscriptionsStore)))
                 {

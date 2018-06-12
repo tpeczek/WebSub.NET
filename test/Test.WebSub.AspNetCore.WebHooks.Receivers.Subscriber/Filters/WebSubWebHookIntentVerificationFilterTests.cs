@@ -23,8 +23,10 @@ namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
         private const string INTENT_VERIFICATION_MODE_UNSUBSCRIBE = "unsubscribe";
 
         internal const string WEBHOOK_ID = "73481a8e-c9ee-4ec4-89e3-b25b3179ae92";
+        internal const string OTHER_WEBHOOK_ID = "24bacd35-cf3e-4ffe-811c-6278d339c11d";
 
         internal const string WEBSUB_ROCKS_TOPIC_URL = "https://websub.rocks/blog/100/";
+        internal const string OTHER_WEBSUB_ROCKS_TOPIC_URL = "https://websub.rocks/blog/101/";
         internal const string WEBSUB_ROCKS_CHALLENGE = "LNecT715EcOqAdVDWbVH";
         internal const string WEBSUB_ROCKS_LEASE_SECONDS = "86400";
         #endregion
@@ -134,6 +136,89 @@ namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
             await webSubWebHookIntentVerificationFilter.OnResourceExecutionAsync(resourceExecutingContext, resourceExecutionDelegate);
 
             Assert.Equal(WEBSUB_ROCKS_CHALLENGE, (resourceExecutingContext.Result as ContentResult).Content);
+        }
+
+        [Fact]
+        public async void OnResourceExecutionAsync_SubscribeIntentVerificationRequestWithoutTopicParameter_SetsBadRequestObjectResult()
+        {
+            ResourceExecutingContext resourceExecutingContext = PrepareSubscribeIntentVerificationResourceExecutingContext(topic: null);
+            ResourceExecutionDelegate resourceExecutionDelegate = () => Task.FromResult<ResourceExecutedContext>(null);
+
+            WebSubWebHookIntentVerificationFilter webSubWebHookIntentVerificationFilter = PrepareWebSubWebHookIntentVerificationFilter();
+
+            await webSubWebHookIntentVerificationFilter.OnResourceExecutionAsync(resourceExecutingContext, resourceExecutionDelegate);
+
+            Assert.IsType<BadRequestObjectResult>(resourceExecutingContext.Result);
+        }
+
+        [Fact]
+        public async void OnResourceExecutionAsync_SubscribeIntentVerificationRequestWithoutChallengeParameter_SetsBadRequestObjectResult()
+        {
+            ResourceExecutingContext resourceExecutingContext = PrepareSubscribeIntentVerificationResourceExecutingContext(challenge: null);
+            ResourceExecutionDelegate resourceExecutionDelegate = () => Task.FromResult<ResourceExecutedContext>(null);
+
+            WebSubWebHookIntentVerificationFilter webSubWebHookIntentVerificationFilter = PrepareWebSubWebHookIntentVerificationFilter();
+
+            await webSubWebHookIntentVerificationFilter.OnResourceExecutionAsync(resourceExecutingContext, resourceExecutionDelegate);
+
+            Assert.IsType<BadRequestObjectResult>(resourceExecutingContext.Result);
+        }
+
+        [Fact]
+        public async void OnResourceExecutionAsync_SubscribeIntentVerificationRequestWithoutLeaseSecondsParameter_SetsBadRequestObjectResult()
+        {
+            ResourceExecutingContext resourceExecutingContext = PrepareSubscribeIntentVerificationResourceExecutingContext(leaseSeconds: null);
+            ResourceExecutionDelegate resourceExecutionDelegate = () => Task.FromResult<ResourceExecutedContext>(null);
+
+            WebSubWebHookIntentVerificationFilter webSubWebHookIntentVerificationFilter = PrepareWebSubWebHookIntentVerificationFilter();
+
+            await webSubWebHookIntentVerificationFilter.OnResourceExecutionAsync(resourceExecutingContext, resourceExecutionDelegate);
+
+            Assert.IsType<BadRequestObjectResult>(resourceExecutingContext.Result);
+        }
+
+        [Fact]
+        public async void OnResourceExecutionAsync_SubscribeIntentVerificationRequestWithoutMatchingId_SetsNotFoundResult()
+        {
+            ResourceExecutingContext resourceExecutingContext = PrepareSubscribeIntentVerificationResourceExecutingContext(id: OTHER_WEBHOOK_ID);
+            ResourceExecutionDelegate resourceExecutionDelegate = () => Task.FromResult<ResourceExecutedContext>(null);
+
+            WebSubWebHookIntentVerificationFilter webSubWebHookIntentVerificationFilter = PrepareWebSubWebHookIntentVerificationFilter();
+
+            await webSubWebHookIntentVerificationFilter.OnResourceExecutionAsync(resourceExecutingContext, resourceExecutionDelegate);
+
+            Assert.IsType<NotFoundResult>(resourceExecutingContext.Result);
+        }
+
+        [Theory]
+        [InlineData(WebSubSubscriptionState.Created)]
+        [InlineData(WebSubSubscriptionState.SubscribeDenied)]
+        [InlineData(WebSubSubscriptionState.SubscribeValidated)]
+        [InlineData(WebSubSubscriptionState.UnsubscribeRequested)]
+        [InlineData(WebSubSubscriptionState.UnsubscribeValidated)]
+        public async void OnResourceExecutionAsync_SubscribeIntentVerificationRequestForSubscriptionStateDifferentThanRequested_SetsNotFoundResult(WebSubSubscriptionState webSubSubscriptionState)
+        {
+            ResourceExecutingContext resourceExecutingContext = PrepareSubscribeIntentVerificationResourceExecutingContext(requestServices: PrepareWebSubRequestServices(subscriptionState: webSubSubscriptionState));
+            ResourceExecutionDelegate resourceExecutionDelegate = () => Task.FromResult<ResourceExecutedContext>(null);
+
+            WebSubWebHookIntentVerificationFilter webSubWebHookIntentVerificationFilter = PrepareWebSubWebHookIntentVerificationFilter();
+
+            await webSubWebHookIntentVerificationFilter.OnResourceExecutionAsync(resourceExecutingContext, resourceExecutionDelegate);
+
+            Assert.IsType<NotFoundResult>(resourceExecutingContext.Result);
+        }
+
+        [Fact]
+        public async void OnResourceExecutionAsync_SubscribeIntentVerificationRequestForNotMatchingTopic_SetsNotFoundResult()
+        {
+            ResourceExecutingContext resourceExecutingContext = PrepareSubscribeIntentVerificationResourceExecutingContext(topic: OTHER_WEBSUB_ROCKS_TOPIC_URL);
+            ResourceExecutionDelegate resourceExecutionDelegate = () => Task.FromResult<ResourceExecutedContext>(null);
+
+            WebSubWebHookIntentVerificationFilter webSubWebHookIntentVerificationFilter = PrepareWebSubWebHookIntentVerificationFilter();
+
+            await webSubWebHookIntentVerificationFilter.OnResourceExecutionAsync(resourceExecutingContext, resourceExecutionDelegate);
+
+            Assert.IsType<NotFoundResult>(resourceExecutingContext.Result);
         }
         #endregion
     }
