@@ -15,6 +15,7 @@ namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters.Infrastru
         private const string INTENT_VERIFICATION_TOPIC_QUERY_PARAMETER_NAME = "hub.topic";
         private const string INTENT_VERIFICATION_CHALLENGE_QUERY_PARAMETER_NAME = "hub.challenge";
         private const string INTENT_VERIFICATION_LEASE_SECONDS_QUERY_PARAMETER_NAME = "hub.lease_seconds";
+        private const string INTENT_VERIFICATION_REASON_QUERY_PARAMETER_NAME = "hub.reason";
 
         public override HttpContext HttpContext { get; }
 
@@ -50,7 +51,7 @@ namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters.Infrastru
 
         public override IFormCollection Form { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        internal IntentVerificationHttpRequest(HttpContext httpContext, string mode, string topic, string challenge, string leaseSeconds)
+        internal IntentVerificationHttpRequest(HttpContext httpContext, string mode, string topic, string challenge, string leaseSeconds, string reason)
         {
             HttpContext = httpContext;
 
@@ -76,6 +77,11 @@ namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters.Infrastru
             if (!String.IsNullOrWhiteSpace(leaseSeconds))
             {
                 queryValues.Add(INTENT_VERIFICATION_LEASE_SECONDS_QUERY_PARAMETER_NAME, leaseSeconds);
+            }
+
+            if (!String.IsNullOrWhiteSpace(reason))
+            {
+                queryValues.Add(INTENT_VERIFICATION_REASON_QUERY_PARAMETER_NAME, reason);
             }
 
             Query = new QueryCollection(queryValues);

@@ -34,9 +34,9 @@ namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters.Infrastru
 
         public override ISession Session { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public IntentVerificationHttpContext(string mode, string topic, string challenge, string leaseSeconds, IServiceProvider requestServices = null)
+        public IntentVerificationHttpContext(string mode, string topic, string challenge, string leaseSeconds, string reason, IServiceProvider requestServices = null)
         {
-            Request = new IntentVerificationHttpRequest(this, mode, topic, challenge, leaseSeconds);
+            Request = new IntentVerificationHttpRequest(this, mode, topic, challenge, leaseSeconds, reason);
             RequestServices = requestServices;
         }
 
