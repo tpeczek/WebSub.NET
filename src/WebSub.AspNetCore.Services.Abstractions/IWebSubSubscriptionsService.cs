@@ -8,6 +8,15 @@ namespace WebSub.AspNetCore.Services
     public interface IWebSubSubscriptionsService
     {
         /// <summary>
+        /// Called when subscribe intent deny request has been made.
+        /// </summary>
+        /// <param name="subscription">The <see cref="WebSubSubscription"/> for which the request has been made.</param>
+        /// <param name="reason">The hub provided reason for which the subscription has been denied.</param>
+        /// <param name="subscriptionsStore">The <see cref="IWebSubSubscriptionsStore"/> which contains the <see cref="WebSubSubscription"/>.</param>
+        /// <returns>The task object representing the asynchronous operation.</returns>
+        Task OnSubscribeIntentDenyAsync(WebSubSubscription subscription, string reason, IWebSubSubscriptionsStore subscriptionsStore);
+
+        /// <summary>
         /// Called when invalid subscribe intent verification request has been made.
         /// </summary>
         /// <param name="subscription">The <see cref="WebSubSubscription"/> for which the request has been made.</param>

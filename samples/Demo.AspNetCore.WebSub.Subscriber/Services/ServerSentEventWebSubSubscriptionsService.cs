@@ -18,6 +18,11 @@ namespace Demo.AspNetCore.WebSub.Subscriber.Services
         #endregion
 
         #region Methods
+        public Task OnSubscribeIntentDenyAsync(WebSubSubscription subscription, string reason, IWebSubSubscriptionsStore subscriptionsStore)
+        {
+            return _serverSentEventsService.SendEventAsync($"OnSubscribeIntentDenyAsync ({subscription.Id})");
+        }
+
         public Task OnInvalidSubscribeIntentVerificationAsync(WebSubSubscription subscription, IWebSubSubscriptionsStore subscriptionsStore)
         {
             return _serverSentEventsService.SendEventAsync($"OnInvalidSubscribeIntentVerificationAsync ({subscription.Id})");
