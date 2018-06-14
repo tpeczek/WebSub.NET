@@ -108,6 +108,7 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
                         intentVerificationResult = await HandleSubscribeIntentVerificationAsync(subscription, subscriptionsStore, subscriptionsService, requestQuery);
                         break;
                     case WebSubConstants.MODE_UNSUBSCRIBE:
+                        intentVerificationResult = await HandleUnsubscribeIntentVerificationAsync(subscription, subscriptionsStore, subscriptionsService, requestQuery);
                         break;
                     default:
                         intentVerificationResult = HandleBadRequest($"A '{WebSubConstants.ReceiverName}' WebHook intent verification request contains unknown '{WebSubConstants.MODE_QUERY_PARAMETER_NAME}' query parameter value.");
@@ -116,6 +117,28 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
             }
 
             return intentVerificationResult;
+        }
+
+        private async Task<IActionResult> HandleSubscribeIntentDenyAsync(WebSubSubscription subscription, IWebSubSubscriptionsStore subscriptionsStore, IWebSubSubscriptionsService subscriptionsService, IQueryCollection requestQuery)
+        {
+            StringValues topicValues = requestQuery[WebSubConstants.TOPIC_QUERY_PARAMETER_NAME];
+            if (StringValues.IsNullOrEmpty(topicValues))
+            {
+                return HandleBadRequest($"A '{WebSubConstants.ReceiverName}' WebHook subscribe intent deny request must contain a '{WebSubConstants.TOPIC_QUERY_PARAMETER_NAME}' query parameter.");
+            }
+            StringValues reason = requestQuery[WebSubConstants.INTENT_DENY_REASON_QUERY_PARAMETER_NAME];
+
+            subscription.State = WebSubSubscriptionState.SubscribeDenied;
+            await subscriptionsStore.UpdateAsync(subscription);
+
+            if (subscriptionsService != null)
+            {
+                await subscriptionsService.OnSubscribeIntentDenyAsync(subscription, reason, subscriptionsStore);
+            }
+
+            _logger.LogInformation("Received a subscribe intent deny request for the '{ReceiverName}' WebHook receiver -- subscription denied, returning confirmation response.", WebSubConstants.ReceiverName);
+
+            return new NoContentResult();
         }
 
         private async Task<IActionResult> HandleSubscribeIntentVerificationAsync(WebSubSubscription subscription, IWebSubSubscriptionsStore subscriptionsStore, IWebSubSubscriptionsService subscriptionsService, IQueryCollection requestQuery)
@@ -150,28 +173,6 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
             }
         }
 
-        private async Task<IActionResult> HandleSubscribeIntentDenyAsync(WebSubSubscription subscription, IWebSubSubscriptionsStore subscriptionsStore, IWebSubSubscriptionsService subscriptionsService, IQueryCollection requestQuery)
-        {
-            StringValues topicValues = requestQuery[WebSubConstants.TOPIC_QUERY_PARAMETER_NAME];
-            if (StringValues.IsNullOrEmpty(topicValues))
-            {
-                return HandleBadRequest($"A '{WebSubConstants.ReceiverName}' WebHook subscribe intent deny request must contain a '{WebSubConstants.TOPIC_QUERY_PARAMETER_NAME}' query parameter.");
-            }
-            StringValues reason = requestQuery[WebSubConstants.INTENT_DENY_REASON_QUERY_PARAMETER_NAME];
-
-            subscription.State = WebSubSubscriptionState.SubscribeDenied;
-            await subscriptionsStore.UpdateAsync(subscription);
-
-            if (subscriptionsService != null)
-            {
-                await subscriptionsService.OnSubscribeIntentDenyAsync(subscription, reason, subscriptionsStore);
-            }
-
-            _logger.LogInformation("Received a subscribe intent deny request for the '{ReceiverName}' WebHook receiver -- subscription denied, returning confirmation response.", WebSubConstants.ReceiverName);
-
-            return new NoContentResult();
-        }
-
         private async Task<bool> VerifySubscribeIntentAsync(WebSubSubscription subscription, IWebSubSubscriptionsStore subscriptionsStore, IWebSubSubscriptionsService subscriptionsService, string topic, int leaseSeconds)
         {
             bool verified = false;
@@ -190,6 +191,58 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
                     subscription.State = WebSubSubscriptionState.SubscribeValidated;
                     subscription.VerificationRequestTimeStampUtc = DateTime.UtcNow;
                     subscription.LeaseSeconds = leaseSeconds;
+                    await subscriptionsStore.UpdateAsync(subscription);
+
+                    verified = true;
+                }
+            }
+
+            return verified;
+        }
+
+        private async Task<IActionResult> HandleUnsubscribeIntentVerificationAsync(WebSubSubscription subscription, IWebSubSubscriptionsStore subscriptionsStore, IWebSubSubscriptionsService subscriptionsService, IQueryCollection requestQuery)
+        {
+            StringValues topicValues = requestQuery[WebSubConstants.TOPIC_QUERY_PARAMETER_NAME];
+            if (StringValues.IsNullOrEmpty(topicValues))
+            {
+                return HandleMissingIntentVerificationParameter(WebSubConstants.TOPIC_QUERY_PARAMETER_NAME);
+            }
+
+            StringValues challengeValues = requestQuery[WebSubConstants.INTENT_VERIFICATION_CHALLENGE_QUERY_PARAMETER_NAME];
+            if (StringValues.IsNullOrEmpty(challengeValues))
+            {
+                return HandleMissingIntentVerificationParameter(WebSubConstants.INTENT_VERIFICATION_CHALLENGE_QUERY_PARAMETER_NAME);
+            }
+
+            if (await VerifyUnsubscribeIntentAsync(subscription, subscriptionsStore, subscriptionsService, topicValues))
+            {
+                _logger.LogInformation("Received an unsubscribe intent verification request for the '{ReceiverName}' WebHook receiver -- verification passed, returning challenge response.", WebSubConstants.ReceiverName);
+                return new ContentResult { Content = challengeValues };
+            }
+            else
+            {
+                _logger.LogInformation("Received an unsubscribe intent verification request for the '{ReceiverName}' WebHook receiver -- verification failed, returning challenge response.", WebSubConstants.ReceiverName);
+                return new NotFoundResult();
+            }
+        }
+
+        private async Task<bool> VerifyUnsubscribeIntentAsync(WebSubSubscription subscription, IWebSubSubscriptionsStore subscriptionsStore, IWebSubSubscriptionsService subscriptionsService, string topic)
+        {
+            bool verified = false;
+
+            if (subscription.State == WebSubSubscriptionState.UnsubscribeRequested)
+            {
+                if (subscription.TopicUrl != topic)
+                {
+                    if (subscriptionsService != null)
+                    {
+                        await subscriptionsService.OnInvalidUnsubscribeIntentVerificationAsync(subscription, subscriptionsStore);
+                    }
+                }
+                else if ((subscriptionsService == null) || (await subscriptionsService.OnUnsubscribeIntentVerificationAsync(subscription, subscriptionsStore)))
+                {
+                    subscription.State = WebSubSubscriptionState.UnsubscribeValidated;
+                    subscription.VerificationRequestTimeStampUtc = DateTime.UtcNow;
                     await subscriptionsStore.UpdateAsync(subscription);
 
                     verified = true;

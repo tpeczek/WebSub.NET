@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using System;
 
 namespace Demo.AspNetCore.WebSub.Subscriber
 {
@@ -7,6 +8,8 @@ namespace Demo.AspNetCore.WebSub.Subscriber
     {
         public static void Main(string[] args)
         {
+            AppContext.SetSwitch("System.Net.Http.UseSocketsHttpHandler", false);
+
             CreateWebHostBuilder(args).Build().Run();
         }
 

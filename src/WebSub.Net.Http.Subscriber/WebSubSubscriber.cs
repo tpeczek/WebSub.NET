@@ -3,9 +3,9 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Globalization;
 using System.Collections.Generic;
 using WebSub.Net.Http.Subscriber.Discovery;
-using System.Globalization;
 
 namespace WebSub.Net.Http.Subscriber
 {

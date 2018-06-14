@@ -34,6 +34,18 @@ namespace Demo.AspNetCore.WebSub.Subscriber.Services
 
             return true;
         }
+
+        public Task OnInvalidUnsubscribeIntentVerificationAsync(WebSubSubscription subscription, IWebSubSubscriptionsStore subscriptionsStore)
+        {
+            return _serverSentEventsService.SendEventAsync($"OnInvalidUnsubscribeIntentVerificationAsync ({subscription.Id})");
+        }
+
+        public async Task<bool> OnUnsubscribeIntentVerificationAsync(WebSubSubscription subscription, IWebSubSubscriptionsStore subscriptionsStore)
+        {
+            await _serverSentEventsService.SendEventAsync($"OnUnsubscribeIntentVerificationAsync ({subscription.Id})");
+
+            return true;
+        }
         #endregion
     }
 }
