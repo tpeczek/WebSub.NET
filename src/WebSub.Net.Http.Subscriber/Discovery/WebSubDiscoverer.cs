@@ -23,7 +23,7 @@ namespace WebSub.Net.Http.Subscriber.Discovery
         #endregion
 
         #region Methods
-        public async Task<WebSubDiscovery> DiscoverAsync(string requestUri, CancellationToken cancellationToken)
+        public async Task<WebSubDiscoveredUrls> DiscoverAsync(string requestUri, CancellationToken cancellationToken)
         {
             HttpResponseMessage discoveryResponse = await _httpClient.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
 
@@ -31,7 +31,7 @@ namespace WebSub.Net.Http.Subscriber.Discovery
             {
                 if (discoveryResponse.Headers.Contains(LINK_HEADER))
                 {
-                    WebSubDiscovery webSubDiscovery = WebLinkParser.ParseWebLinkHeaders(discoveryResponse.Headers.GetValues(LINK_HEADER));
+                    WebSubDiscoveredUrls webSubDiscovery = WebLinkParser.ParseWebLinkHeaders(discoveryResponse.Headers.GetValues(LINK_HEADER));
                     if (RequiredUrlsIdentified(webSubDiscovery))
                     {
                         return webSubDiscovery;
@@ -42,9 +42,9 @@ namespace WebSub.Net.Http.Subscriber.Discovery
             throw new WebSubDiscoveryException("The discovery mechanism haven't identified required URLs.", discoveryResponse);
         }
 
-        private static bool RequiredUrlsIdentified(WebSubDiscovery webSubDiscovery)
+        private static bool RequiredUrlsIdentified(WebSubDiscoveredUrls webSubDiscovery)
         {
-            return !String.IsNullOrWhiteSpace(webSubDiscovery.TopicUrl) && (webSubDiscovery.HubsUrls != null) && (webSubDiscovery.HubsUrls.Any());
+            return !String.IsNullOrWhiteSpace(webSubDiscovery.Topic) && (webSubDiscovery.Hubs != null) && (webSubDiscovery.Hubs.Any());
         }
         #endregion
     }

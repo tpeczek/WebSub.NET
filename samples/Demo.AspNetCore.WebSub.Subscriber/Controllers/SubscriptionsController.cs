@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebSub.AspNetCore.Services;
-using StoreableWebSubSubscription = WebSub.AspNetCore.Services.WebSubSubscription;
 using WebSub.Net.Http.Subscriber;
 using WebSub.Net.Http.Subscriber.Discovery;
 using Demo.AspNetCore.WebSub.Subscriber.Model;
@@ -38,7 +37,7 @@ namespace Demo.AspNetCore.WebSub.Subscriber.Controllers
                 return new SubscriptionViewModel(ModelState);
             }
 
-            StoreableWebSubSubscription webSubSubscription = null;
+            WebSubSubscription webSubSubscription = null;
             try
             {
                 webSubSubscription = await _webSubSubscriptionsStore.CreateAsync();
@@ -46,16 +45,16 @@ namespace Demo.AspNetCore.WebSub.Subscriber.Controllers
                 webSubSubscription.HubUrl = (await webSubSubscriber.SubscribeAsync(
                     new WebSubSubscribeParameters(subscribeViewModel.Url, webSubSubscription.CallbackUrl)
                     {
-                        OnDiscoveredAsync = async (WebSubDiscovery discovery, CancellationToken cancellationToken) =>
+                        OnDiscoveredAsync = async (WebSubDiscoveredUrls discovery, CancellationToken cancellationToken) =>
                         {
                             webSubSubscription.State = WebSubSubscriptionState.SubscribeRequested;
-                            webSubSubscription.TopicUrl = discovery.TopicUrl;
+                            webSubSubscription.TopicUrl = discovery.Topic;
 
                             await _webSubSubscriptionsStore.UpdateAsync(webSubSubscription);
                         }
                     },
                     HttpContext.RequestAborted)
-                ).HubUrl;
+                ).Hub;
 
                 return new SubscriptionViewModel(webSubSubscription);
             }

@@ -3,34 +3,34 @@
 namespace WebSub.Net.Http.Subscriber.Discovery
 {
     /// <summary>
-    /// A WebSub discovery.
+    /// URLs resulting from WebSub discovery.
     /// </summary>
-    public struct WebSubDiscovery
+    public struct WebSubDiscoveredUrls
     {
         #region Fields
-        private List<string> _hubsUrls;
+        private List<string> _hubs;
         #endregion
 
         #region Properties
         /// <summary>
         /// Gets the canonical URL for discovered topic.
         /// </summary>
-        public string TopicUrl { get; internal set; }
+        public string Topic { get; internal set; }
 
         /// <summary>
         /// Gets the URLs for discovered hubs.
         /// </summary>
-        public IEnumerable<string> HubsUrls { get { return _hubsUrls; } }
+        public IEnumerable<string> Hubs { get { return _hubs; } }
         #endregion
 
         #region Methods
-        internal void AddHubUrl(string url)
+        internal void AddHub(string url)
         {
-            if (_hubsUrls == null)
+            if (_hubs == null)
             {
-                _hubsUrls = new List<string>();
+                _hubs = new List<string>();
             }
-            _hubsUrls.Add(url);
+            _hubs.Add(url);
         }
         #endregion
     }

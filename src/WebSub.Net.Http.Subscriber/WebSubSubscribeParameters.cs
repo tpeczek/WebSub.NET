@@ -65,12 +65,12 @@ namespace WebSub.Net.Http.Subscriber
         /// <summary>
         /// Called after the topic and hubs URLs have been discovered.
         /// </summary>
-        public Action<WebSubDiscovery> OnDiscovered { get; set; }
+        public Action<WebSubDiscoveredUrls> OnDiscovered { get; set; }
 
         /// <summary>
         /// Called after the topic and hubs URLs have been discovered.
         /// </summary>
-        public Func<WebSubDiscovery, CancellationToken, Task> OnDiscoveredAsync { get; set; }
+        public Func<WebSubDiscoveredUrls, CancellationToken, Task> OnDiscoveredAsync { get; set; }
         #endregion
 
         #region Constructor

@@ -18,9 +18,9 @@ namespace WebSub.Net.Http.Subscriber.Discovery
             public string Value { get; set; }
         }
 
-        public static WebSubDiscovery ParseWebLinkHeaders(IEnumerable<string> linkHeaders)
+        public static WebSubDiscoveredUrls ParseWebLinkHeaders(IEnumerable<string> linkHeaders)
         {
-            WebSubDiscovery webSubDiscovery = new WebSubDiscovery();
+            WebSubDiscoveredUrls webSubDiscovery = new WebSubDiscoveredUrls();
 
             foreach (string linkHeader in linkHeaders)
             {
@@ -30,7 +30,7 @@ namespace WebSub.Net.Http.Subscriber.Discovery
             return webSubDiscovery;
         }
 
-        private static WebSubDiscovery ParseWebLinkHeader(WebSubDiscovery webSubDiscovery, string linkHeader)
+        private static WebSubDiscoveredUrls ParseWebLinkHeader(WebSubDiscoveredUrls webSubDiscovery, string linkHeader)
         {
             string inputString = linkHeader;
             int inputPos = 0;
@@ -85,7 +85,7 @@ namespace WebSub.Net.Http.Subscriber.Discovery
             return webSubDiscovery;
         }
 
-        private static WebSubDiscovery ParseWebLinkHeaderValue(WebSubDiscovery webSubDiscovery, string inputString, ref int inputPos, ref Token nextToken)
+        private static WebSubDiscoveredUrls ParseWebLinkHeaderValue(WebSubDiscoveredUrls webSubDiscovery, string inputString, ref int inputPos, ref Token nextToken)
         {
             string url = nextToken.Value;
             string rel = null;
@@ -122,16 +122,16 @@ namespace WebSub.Net.Http.Subscriber.Discovery
 
             if (rel == HUB_RELATION)
             {
-                webSubDiscovery.AddHubUrl(url);
+                webSubDiscovery.AddHub(url);
             }
             else if (rel == TOPIC_RELATION)
             {
-                if (!String.IsNullOrWhiteSpace(webSubDiscovery.TopicUrl))
+                if (!String.IsNullOrWhiteSpace(webSubDiscovery.Topic))
                 {
                     throw new WebSubDiscoveryException("Multiple canonical URLs for the topic have been found.");
                 }
 
-                webSubDiscovery.TopicUrl = url;
+                webSubDiscovery.Topic = url;
             }
 
 
