@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -8,10 +9,9 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Xunit;
+using WebSub.AspNetCore.Services;
 using WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters;
 using Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters.Infrastructure;
-using WebSub.AspNetCore.Services;
-using System.Threading.Tasks;
 
 namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
 {
@@ -74,17 +74,20 @@ namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
         #endregion
 
         #region Tests
-        [Fact]
-        public async void OnResourceExecutionAsync_IntentVerificationRequestWithoutId_CallsNext()
+        [Theory]
+        [InlineData(INTENT_VERIFICATION_MODE_DENIED)]
+        [InlineData(INTENT_VERIFICATION_MODE_SUBSCRIBE)]
+        [InlineData(INTENT_VERIFICATION_MODE_UNSUBSCRIBE)]
+        public async void OnResourceExecutionAsync_IntentVerificationRequest_DoesNotCallNext(string mode)
         {
-            ResourceExecutingContext resourceExecutingContext = PrepareIntentVerificatioResourceExecutingContext(id: null);
+            ResourceExecutingContext resourceExecutingContext = PrepareIntentVerificatioResourceExecutingContext(mode: mode);
             Mock<ResourceExecutionDelegate> resourceExecutionDelegateMock = new Mock<ResourceExecutionDelegate>();
 
             WebSubWebHookIntentVerificationFilter webSubWebHookIntentVerificationFilter = PrepareWebSubWebHookIntentVerificationFilter();
 
             await webSubWebHookIntentVerificationFilter.OnResourceExecutionAsync(resourceExecutingContext, resourceExecutionDelegateMock.Object);
 
-            resourceExecutionDelegateMock.Verify(m => m(), Times.Once);
+            resourceExecutionDelegateMock.Verify(m => m(), Times.Never);
         }
 
         [Fact]
@@ -100,17 +103,52 @@ namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
             resourceExecutionDelegateMock.Verify(m => m(), Times.Once);
         }
 
-        [Fact]
-        public async void OnResourceExecutionAsync_SubscribeIntentDenyRequest_DoesNotCallNext()
+        [Theory]
+        [InlineData(INTENT_VERIFICATION_MODE_DENIED)]
+        [InlineData(INTENT_VERIFICATION_MODE_SUBSCRIBE)]
+        [InlineData(INTENT_VERIFICATION_MODE_UNSUBSCRIBE)]
+        public async void OnResourceExecutionAsync_IntentVerificationRequestWithoutId_CallsNext(string mode)
         {
-            ResourceExecutingContext resourceExecutingContext = PrepareIntentVerificatioResourceExecutingContext(mode: INTENT_VERIFICATION_MODE_DENIED, challenge: null, leaseSeconds: null);
+            ResourceExecutingContext resourceExecutingContext = PrepareIntentVerificatioResourceExecutingContext(id: null, mode: mode);
             Mock<ResourceExecutionDelegate> resourceExecutionDelegateMock = new Mock<ResourceExecutionDelegate>();
 
             WebSubWebHookIntentVerificationFilter webSubWebHookIntentVerificationFilter = PrepareWebSubWebHookIntentVerificationFilter();
 
             await webSubWebHookIntentVerificationFilter.OnResourceExecutionAsync(resourceExecutingContext, resourceExecutionDelegateMock.Object);
 
-            resourceExecutionDelegateMock.Verify(m => m(), Times.Never);
+            resourceExecutionDelegateMock.Verify(m => m(), Times.Once);
+        }
+
+        [Theory]
+        [InlineData(INTENT_VERIFICATION_MODE_DENIED)]
+        [InlineData(INTENT_VERIFICATION_MODE_SUBSCRIBE)]
+        [InlineData(INTENT_VERIFICATION_MODE_UNSUBSCRIBE)]
+        public async void OnResourceExecutionAsync_IntentVerificationRequestWithoutMatchingId_SetsNotFoundResult(string mode)
+        {
+            ResourceExecutingContext resourceExecutingContext = PrepareIntentVerificatioResourceExecutingContext(id: OTHER_WEBHOOK_ID, mode: mode);
+            ResourceExecutionDelegate resourceExecutionDelegate = () => Task.FromResult<ResourceExecutedContext>(null);
+
+            WebSubWebHookIntentVerificationFilter webSubWebHookIntentVerificationFilter = PrepareWebSubWebHookIntentVerificationFilter();
+
+            await webSubWebHookIntentVerificationFilter.OnResourceExecutionAsync(resourceExecutingContext, resourceExecutionDelegate);
+
+            Assert.IsType<NotFoundResult>(resourceExecutingContext.Result);
+        }
+
+        [Theory]
+        [InlineData(INTENT_VERIFICATION_MODE_DENIED)]
+        [InlineData(INTENT_VERIFICATION_MODE_SUBSCRIBE)]
+        [InlineData(INTENT_VERIFICATION_MODE_UNSUBSCRIBE)]
+        public async void OnResourceExecutionAsync_IntentVerificationRequestWithoutTopicParameter_SetsBadRequestObjectResult(string mode)
+        {
+            ResourceExecutingContext resourceExecutingContext = PrepareIntentVerificatioResourceExecutingContext(mode: mode, topic: null);
+            ResourceExecutionDelegate resourceExecutionDelegate = () => Task.FromResult<ResourceExecutedContext>(null);
+
+            WebSubWebHookIntentVerificationFilter webSubWebHookIntentVerificationFilter = PrepareWebSubWebHookIntentVerificationFilter();
+
+            await webSubWebHookIntentVerificationFilter.OnResourceExecutionAsync(resourceExecutingContext, resourceExecutionDelegate);
+
+            Assert.IsType<BadRequestObjectResult>(resourceExecutingContext.Result);
         }
 
         [Fact]
@@ -126,36 +164,12 @@ namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
             Assert.IsType<NoContentResult>(resourceExecutingContext.Result);
         }
 
-        [Fact]
-        public async void OnResourceExecutionAsync_SubscribeIntentDenyRequestWithoutTopicParameter_SetsBadRequestObjectResult()
+        [Theory]
+        [InlineData(INTENT_VERIFICATION_MODE_SUBSCRIBE, WebSubSubscriptionState.SubscribeRequested)]
+        [InlineData(INTENT_VERIFICATION_MODE_UNSUBSCRIBE, WebSubSubscriptionState.UnsubscribeRequested)]
+        public async void OnResourceExecutionAsync_SubscribeUnsubscribeIntentVerificationRequest_SetsContentResult(string mode, WebSubSubscriptionState webSubSubscriptionState)
         {
-            ResourceExecutingContext resourceExecutingContext = PrepareIntentVerificatioResourceExecutingContext(mode: INTENT_VERIFICATION_MODE_DENIED, topic: null, challenge: null, leaseSeconds: null);
-            ResourceExecutionDelegate resourceExecutionDelegate = () => Task.FromResult<ResourceExecutedContext>(null);
-
-            WebSubWebHookIntentVerificationFilter webSubWebHookIntentVerificationFilter = PrepareWebSubWebHookIntentVerificationFilter();
-
-            await webSubWebHookIntentVerificationFilter.OnResourceExecutionAsync(resourceExecutingContext, resourceExecutionDelegate);
-
-            Assert.IsType<BadRequestObjectResult>(resourceExecutingContext.Result);
-        }
-
-        [Fact]
-        public async void OnResourceExecutionAsync_SubscribeIntentVerificationRequest_DoesNotCallNext()
-        {
-            ResourceExecutingContext resourceExecutingContext = PrepareIntentVerificatioResourceExecutingContext();
-            Mock<ResourceExecutionDelegate> resourceExecutionDelegateMock = new Mock<ResourceExecutionDelegate>();
-
-            WebSubWebHookIntentVerificationFilter webSubWebHookIntentVerificationFilter = PrepareWebSubWebHookIntentVerificationFilter();
-
-            await webSubWebHookIntentVerificationFilter.OnResourceExecutionAsync(resourceExecutingContext, resourceExecutionDelegateMock.Object);
-
-            resourceExecutionDelegateMock.Verify(m => m(), Times.Never);
-        }
-
-        [Fact]
-        public async void OnResourceExecutionAsync_SubscribeIntentVerificationRequest_SetsContentResult()
-        {
-            ResourceExecutingContext resourceExecutingContext = PrepareIntentVerificatioResourceExecutingContext();
+            ResourceExecutingContext resourceExecutingContext = PrepareIntentVerificatioResourceExecutingContext(mode: mode, requestServices: PrepareWebSubRequestServices(subscriptionState: webSubSubscriptionState));
             ResourceExecutionDelegate resourceExecutionDelegate = () => Task.FromResult<ResourceExecutedContext>(null);
 
             WebSubWebHookIntentVerificationFilter webSubWebHookIntentVerificationFilter = PrepareWebSubWebHookIntentVerificationFilter();
@@ -165,10 +179,12 @@ namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
             Assert.IsType<ContentResult>(resourceExecutingContext.Result);
         }
 
-        [Fact]
-        public async void OnResourceExecutionAsync_SubscribeIntentVerificationRequest_ContentResultContainsChallenge()
+        [Theory]
+        [InlineData(INTENT_VERIFICATION_MODE_SUBSCRIBE, WebSubSubscriptionState.SubscribeRequested)]
+        [InlineData(INTENT_VERIFICATION_MODE_UNSUBSCRIBE, WebSubSubscriptionState.UnsubscribeRequested)]
+        public async void OnResourceExecutionAsync_SubscribeUnsubscribeIntentVerificationRequest_ContentResultContainsChallenge(string mode, WebSubSubscriptionState webSubSubscriptionState)
         {
-            ResourceExecutingContext resourceExecutingContext = PrepareIntentVerificatioResourceExecutingContext();
+            ResourceExecutingContext resourceExecutingContext = PrepareIntentVerificatioResourceExecutingContext(mode: mode, requestServices: PrepareWebSubRequestServices(subscriptionState: webSubSubscriptionState));
             ResourceExecutionDelegate resourceExecutionDelegate = () => Task.FromResult<ResourceExecutedContext>(null);
 
             WebSubWebHookIntentVerificationFilter webSubWebHookIntentVerificationFilter = PrepareWebSubWebHookIntentVerificationFilter();
@@ -178,23 +194,12 @@ namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
             Assert.Equal(WEBSUB_ROCKS_CHALLENGE, (resourceExecutingContext.Result as ContentResult).Content);
         }
 
-        [Fact]
-        public async void OnResourceExecutionAsync_SubscribeIntentVerificationRequestWithoutTopicParameter_SetsBadRequestObjectResult()
+        [Theory]
+        [InlineData(INTENT_VERIFICATION_MODE_SUBSCRIBE, WebSubSubscriptionState.SubscribeRequested)]
+        [InlineData(INTENT_VERIFICATION_MODE_UNSUBSCRIBE, WebSubSubscriptionState.UnsubscribeRequested)]
+        public async void OnResourceExecutionAsync_SubscribeUnsubscribeVerificationRequestWithoutChallengeParameter_SetsBadRequestObjectResult(string mode, WebSubSubscriptionState webSubSubscriptionState)
         {
-            ResourceExecutingContext resourceExecutingContext = PrepareIntentVerificatioResourceExecutingContext(topic: null);
-            ResourceExecutionDelegate resourceExecutionDelegate = () => Task.FromResult<ResourceExecutedContext>(null);
-
-            WebSubWebHookIntentVerificationFilter webSubWebHookIntentVerificationFilter = PrepareWebSubWebHookIntentVerificationFilter();
-
-            await webSubWebHookIntentVerificationFilter.OnResourceExecutionAsync(resourceExecutingContext, resourceExecutionDelegate);
-
-            Assert.IsType<BadRequestObjectResult>(resourceExecutingContext.Result);
-        }
-
-        [Fact]
-        public async void OnResourceExecutionAsync_SubscribeIntentVerificationRequestWithoutChallengeParameter_SetsBadRequestObjectResult()
-        {
-            ResourceExecutingContext resourceExecutingContext = PrepareIntentVerificatioResourceExecutingContext(challenge: null);
+            ResourceExecutingContext resourceExecutingContext = PrepareIntentVerificatioResourceExecutingContext(mode: mode, challenge: null, requestServices: PrepareWebSubRequestServices(subscriptionState: webSubSubscriptionState));
             ResourceExecutionDelegate resourceExecutionDelegate = () => Task.FromResult<ResourceExecutedContext>(null);
 
             WebSubWebHookIntentVerificationFilter webSubWebHookIntentVerificationFilter = PrepareWebSubWebHookIntentVerificationFilter();
@@ -207,7 +212,7 @@ namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
         [Fact]
         public async void OnResourceExecutionAsync_SubscribeIntentVerificationRequestWithoutLeaseSecondsParameter_SetsBadRequestObjectResult()
         {
-            ResourceExecutingContext resourceExecutingContext = PrepareIntentVerificatioResourceExecutingContext(leaseSeconds: null);
+            ResourceExecutingContext resourceExecutingContext = PrepareIntentVerificatioResourceExecutingContext(mode: INTENT_VERIFICATION_MODE_SUBSCRIBE, leaseSeconds: null, requestServices: PrepareWebSubRequestServices(subscriptionState: WebSubSubscriptionState.SubscribeRequested));
             ResourceExecutionDelegate resourceExecutionDelegate = () => Task.FromResult<ResourceExecutedContext>(null);
 
             WebSubWebHookIntentVerificationFilter webSubWebHookIntentVerificationFilter = PrepareWebSubWebHookIntentVerificationFilter();
@@ -217,10 +222,15 @@ namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
             Assert.IsType<BadRequestObjectResult>(resourceExecutingContext.Result);
         }
 
-        [Fact]
-        public async void OnResourceExecutionAsync_SubscribeIntentVerificationRequestWithoutMatchingId_SetsNotFoundResult()
+        [Theory]
+        [InlineData(WebSubSubscriptionState.Created)]
+        [InlineData(WebSubSubscriptionState.SubscribeDenied)]
+        [InlineData(WebSubSubscriptionState.SubscribeValidated)]
+        [InlineData(WebSubSubscriptionState.UnsubscribeRequested)]
+        [InlineData(WebSubSubscriptionState.UnsubscribeValidated)]
+        public async void OnResourceExecutionAsync_SubscribeIntentVerificationRequestForSubscriptionStateDifferentThanSubscribeRequested_SetsNotFoundResult(WebSubSubscriptionState webSubSubscriptionState)
         {
-            ResourceExecutingContext resourceExecutingContext = PrepareIntentVerificatioResourceExecutingContext(id: OTHER_WEBHOOK_ID);
+            ResourceExecutingContext resourceExecutingContext = PrepareIntentVerificatioResourceExecutingContext(mode: INTENT_VERIFICATION_MODE_SUBSCRIBE, requestServices: PrepareWebSubRequestServices(subscriptionState: webSubSubscriptionState));
             ResourceExecutionDelegate resourceExecutionDelegate = () => Task.FromResult<ResourceExecutedContext>(null);
 
             WebSubWebHookIntentVerificationFilter webSubWebHookIntentVerificationFilter = PrepareWebSubWebHookIntentVerificationFilter();
@@ -232,13 +242,13 @@ namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
 
         [Theory]
         [InlineData(WebSubSubscriptionState.Created)]
+        [InlineData(WebSubSubscriptionState.SubscribeRequested)]
         [InlineData(WebSubSubscriptionState.SubscribeDenied)]
         [InlineData(WebSubSubscriptionState.SubscribeValidated)]
-        [InlineData(WebSubSubscriptionState.UnsubscribeRequested)]
         [InlineData(WebSubSubscriptionState.UnsubscribeValidated)]
-        public async void OnResourceExecutionAsync_SubscribeIntentVerificationRequestForSubscriptionStateDifferentThanRequested_SetsNotFoundResult(WebSubSubscriptionState webSubSubscriptionState)
+        public async void OnResourceExecutionAsync_UnsubscribeIntentVerificationRequestForSubscriptionStateDifferentThanUnsubscribeRequested_SetsNotFoundResult(WebSubSubscriptionState webSubSubscriptionState)
         {
-            ResourceExecutingContext resourceExecutingContext = PrepareIntentVerificatioResourceExecutingContext(requestServices: PrepareWebSubRequestServices(subscriptionState: webSubSubscriptionState));
+            ResourceExecutingContext resourceExecutingContext = PrepareIntentVerificatioResourceExecutingContext(mode: INTENT_VERIFICATION_MODE_UNSUBSCRIBE, requestServices: PrepareWebSubRequestServices(subscriptionState: webSubSubscriptionState));
             ResourceExecutionDelegate resourceExecutionDelegate = () => Task.FromResult<ResourceExecutedContext>(null);
 
             WebSubWebHookIntentVerificationFilter webSubWebHookIntentVerificationFilter = PrepareWebSubWebHookIntentVerificationFilter();
@@ -248,10 +258,12 @@ namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
             Assert.IsType<NotFoundResult>(resourceExecutingContext.Result);
         }
 
-        [Fact]
-        public async void OnResourceExecutionAsync_SubscribeIntentVerificationRequestForNotMatchingTopic_SetsNotFoundResult()
+        [Theory]
+        [InlineData(INTENT_VERIFICATION_MODE_SUBSCRIBE, WebSubSubscriptionState.SubscribeRequested)]
+        [InlineData(INTENT_VERIFICATION_MODE_UNSUBSCRIBE, WebSubSubscriptionState.UnsubscribeRequested)]
+        public async void OnResourceExecutionAsync_SubscribeIntentVerificationRequestForNotMatchingTopic_SetsNotFoundResult(string mode, WebSubSubscriptionState webSubSubscriptionState)
         {
-            ResourceExecutingContext resourceExecutingContext = PrepareIntentVerificatioResourceExecutingContext(topic: OTHER_WEBSUB_ROCKS_TOPIC_URL);
+            ResourceExecutingContext resourceExecutingContext = PrepareIntentVerificatioResourceExecutingContext(mode: mode, topic: OTHER_WEBSUB_ROCKS_TOPIC_URL, requestServices: PrepareWebSubRequestServices(subscriptionState: webSubSubscriptionState));
             ResourceExecutionDelegate resourceExecutionDelegate = () => Task.FromResult<ResourceExecutedContext>(null);
 
             WebSubWebHookIntentVerificationFilter webSubWebHookIntentVerificationFilter = PrepareWebSubWebHookIntentVerificationFilter();
