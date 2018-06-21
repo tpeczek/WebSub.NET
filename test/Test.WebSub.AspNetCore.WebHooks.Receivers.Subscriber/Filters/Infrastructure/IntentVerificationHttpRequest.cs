@@ -9,7 +9,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters.Infrastructure
 {
-    internal class IntentVerificationHttpRequest : HttpRequest
+    internal class IntentVerificationHttpRequest : WebSubHttpRequest
     {
         private const string INTENT_VERIFICATION_MODE_QUERY_PARAMETER_NAME = "hub.mode";
         private const string INTENT_VERIFICATION_TOPIC_QUERY_PARAMETER_NAME = "hub.topic";
@@ -17,46 +17,9 @@ namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters.Infrastru
         private const string INTENT_VERIFICATION_LEASE_SECONDS_QUERY_PARAMETER_NAME = "hub.lease_seconds";
         private const string INTENT_VERIFICATION_REASON_QUERY_PARAMETER_NAME = "hub.reason";
 
-        public override HttpContext HttpContext { get; }
-
-        public override string Method { get; set; }
-
-        public override string Scheme { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public override bool IsHttps { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public override HostString Host { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public override PathString PathBase { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public override PathString Path { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public override QueryString QueryString { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public override IQueryCollection Query { get; set; }
-
-        public override string Protocol { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public override IHeaderDictionary Headers => throw new NotImplementedException();
-
-        public override IRequestCookieCollection Cookies { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public override long? ContentLength { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public override string ContentType { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public override Stream Body { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public override bool HasFormContentType => throw new NotImplementedException();
-
-        public override IFormCollection Form { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        internal IntentVerificationHttpRequest(HttpContext httpContext, string mode, string topic, string challenge, string leaseSeconds, string reason)
+        public IntentVerificationHttpRequest(string mode, string topic, string challenge, string leaseSeconds, string reason)
+            : base(HttpMethods.Get)
         {
-            HttpContext = httpContext;
-
-            Method = HttpMethods.Get;
-
             Dictionary<String, StringValues> queryValues = new Dictionary<string, StringValues>();
 
             if (!String.IsNullOrWhiteSpace(mode))
@@ -85,11 +48,6 @@ namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters.Infrastru
             }
 
             Query = new QueryCollection(queryValues);
-        }
-
-        public override Task<IFormCollection> ReadFormAsync(CancellationToken cancellationToken = default(CancellationToken))
-        {
-            throw new NotImplementedException();
         }
     }
 }

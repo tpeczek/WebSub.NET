@@ -22,13 +22,12 @@ namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
         private const string INTENT_VERIFICATION_MODE_SUBSCRIBE = "subscribe";
         private const string INTENT_VERIFICATION_MODE_UNSUBSCRIBE = "unsubscribe";
 
-        internal const string WEBHOOK_ID = "73481a8e-c9ee-4ec4-89e3-b25b3179ae92";
-        internal const string OTHER_WEBHOOK_ID = "24bacd35-cf3e-4ffe-811c-6278d339c11d";
+        private const string WEBHOOK_ID = "73481a8e-c9ee-4ec4-89e3-b25b3179ae92";
 
-        internal const string WEBSUB_ROCKS_TOPIC_URL = "https://websub.rocks/blog/100/";
-        internal const string OTHER_WEBSUB_ROCKS_TOPIC_URL = "https://websub.rocks/blog/101/";
-        internal const string WEBSUB_ROCKS_CHALLENGE = "LNecT715EcOqAdVDWbVH";
-        internal const string WEBSUB_ROCKS_LEASE_SECONDS = "86400";
+        private const string WEBSUB_ROCKS_TOPIC_URL = "https://websub.rocks/blog/100/";
+        private const string OTHER_WEBSUB_ROCKS_TOPIC_URL = "https://websub.rocks/blog/101/";
+        private const string WEBSUB_ROCKS_CHALLENGE = "LNecT715EcOqAdVDWbVH";
+        private const string WEBSUB_ROCKS_LEASE_SECONDS = "86400";
         #endregion
 
         #region Prepare SUT
