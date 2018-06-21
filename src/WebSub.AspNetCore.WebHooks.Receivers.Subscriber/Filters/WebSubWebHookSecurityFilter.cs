@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.WebHooks.Filters;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using WebSub.AspNetCore.Services;
 
 namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
 {
@@ -42,12 +45,58 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
                 throw new ArgumentNullException(nameof(context));
             }
 
-            if (context.RouteData.TryGetWebHookReceiverId(out string subscriptionId))
+            IActionResult secureConnectionCheckResult = EnsureSecureConnection(ReceiverName, context.HttpContext.Request);
+            if (secureConnectionCheckResult != null)
             {
-                await next();
+                context.Result = secureConnectionCheckResult;
+                return;
             }
 
-            context.Result = new NotFoundResult();
+            if (!context.RouteData.TryGetWebHookReceiverId(out string subscriptionId))
+            {
+                context.Result = new NotFoundResult();
+                return;
+            }
+
+            WebSubSubscription subscription = await RetrieveWebSubSubscriptionAsync(context, subscriptionId);
+            if (subscription == null)
+            {
+                context.Result = new NotFoundResult();
+                return;
+            }
+
+            if (HttpMethods.IsPost(context.HttpContext.Request.Method))
+            {
+                IActionResult contentDistributionRequestVerificationResult = VerifyContentDistributionRequest(subscription);
+                if (contentDistributionRequestVerificationResult != null)
+                {
+                    context.Result = contentDistributionRequestVerificationResult;
+                    return;
+                }
+            }
+
+            context.HttpContext.Items[WebSubConstants.HTTP_CONTEXT_ITEMS_SUBSCRIPTION_KEY] = subscription;
+
+            await next();
+        }
+
+        private static Task<WebSubSubscription> RetrieveWebSubSubscriptionAsync(ResourceExecutingContext context, string subscriptionId)
+        {
+            IWebSubSubscriptionsStore subscriptionsStore = context.HttpContext.RequestServices.GetRequiredService<IWebSubSubscriptionsStore>();
+
+            return subscriptionsStore.RetrieveAsync(subscriptionId);
+        }
+        
+        private static IActionResult VerifyContentDistributionRequest(WebSubSubscription subscription)
+        {
+            IActionResult verificationResult = null;
+
+            if (subscription.State != WebSubSubscriptionState.SubscribeValidated)
+            {
+                verificationResult = new NotFoundResult();
+            }
+
+            return verificationResult;
         }
         #endregion
     }

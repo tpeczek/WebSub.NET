@@ -59,9 +59,10 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
             }
 
             IQueryCollection requestQuery = context.HttpContext.Request.Query;
-            if (HttpMethods.IsGet(context.HttpContext.Request.Method) && context.RouteData.TryGetWebHookReceiverId(out string subscriptionId) && requestQuery.ContainsKey(WebSubConstants.MODE_QUERY_PARAMETER_NAME))
+            if (HttpMethods.IsGet(context.HttpContext.Request.Method) && requestQuery.ContainsKey(WebSubConstants.MODE_QUERY_PARAMETER_NAME))
             {
-                context.Result = await HandleIntentVerificationAsync(subscriptionId, requestQuery, context.HttpContext.RequestServices);
+                WebSubSubscription subscription = context.HttpContext.Items[WebSubConstants.HTTP_CONTEXT_ITEMS_SUBSCRIPTION_KEY] as WebSubSubscription;
+                context.Result = await HandleIntentVerificationAsync(subscription, requestQuery, context.HttpContext.RequestServices);
             }
             else
             {
@@ -69,16 +70,15 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
             }
         }
 
-        private async Task<IActionResult> HandleIntentVerificationAsync(string subscriptionId, IQueryCollection requestQuery, IServiceProvider requestServices)
+        private async Task<IActionResult> HandleIntentVerificationAsync(WebSubSubscription subscription, IQueryCollection requestQuery, IServiceProvider requestServices)
         {
             IActionResult intentVerificationResult = new NotFoundResult();
 
-            IWebSubSubscriptionsStore subscriptionsStore = requestServices.GetRequiredService<IWebSubSubscriptionsStore>();
-            IWebSubSubscriptionsService subscriptionsService = requestServices.GetService<IWebSubSubscriptionsService>();
-
-            WebSubSubscription subscription = await subscriptionsStore.RetrieveAsync(subscriptionId);
             if (subscription != null)
             {
+                IWebSubSubscriptionsStore subscriptionsStore = requestServices.GetRequiredService<IWebSubSubscriptionsStore>();
+                IWebSubSubscriptionsService subscriptionsService = requestServices.GetService<IWebSubSubscriptionsService>();
+
                 switch (requestQuery[WebSubConstants.MODE_QUERY_PARAMETER_NAME])
                 {
                     case WebSubConstants.MODE_DENIED:
