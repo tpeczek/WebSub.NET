@@ -10,6 +10,7 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Metadata
     internal class WebSubMetadata : WebHookMetadata, IWebHookFilterMetadata
     {
         #region Fields
+        private readonly WebSubWebHookSecurityFilter _securityFilter;
         private readonly WebSubWebHookIntentVerificationFilter _intentVerificationFilter;
         #endregion
 
@@ -24,10 +25,12 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Metadata
         /// <summary>
         /// Instantiates a new <see cref="WebSubMetadata"/> instance.
         /// </summary>
-        /// <param name="intentVerificationFilter"> The <see cref="WebSubWebHookIntentVerificationFilter"/></param>
-        public WebSubMetadata(WebSubWebHookIntentVerificationFilter intentVerificationFilter)
+        /// <param name="securityFilter">The <see cref="WebSubWebHookSecurityFilter"/></param>
+        /// <param name="intentVerificationFilter">The <see cref="WebSubWebHookIntentVerificationFilter"/></param>
+        public WebSubMetadata(WebSubWebHookSecurityFilter securityFilter, WebSubWebHookIntentVerificationFilter intentVerificationFilter)
             : base(WebSubConstants.ReceiverName)
         {
+            _securityFilter = securityFilter;
             _intentVerificationFilter = intentVerificationFilter;
         }
         #endregion
@@ -39,6 +42,7 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Metadata
         /// <param name="context">The <see cref="WebHookFilterMetadataContext"/> for the action.</param>
         public void AddFilters(WebHookFilterMetadataContext context)
         {
+            context.Results.Add(_securityFilter);
             context.Results.Add(_intentVerificationFilter);
         }
         #endregion

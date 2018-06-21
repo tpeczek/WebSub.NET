@@ -23,6 +23,7 @@ namespace Microsoft.Extensions.DependencyInjection
             }
 
             WebHookMetadata.Register<WebSubMetadata>(services);
+            services.TryAddSingleton<WebSubWebHookSecurityFilter>();
             services.TryAddSingleton<WebSubWebHookIntentVerificationFilter>();
         }
     }

@@ -14,9 +14,9 @@ using WebSub.AspNetCore.Services;
 namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
 {
     /// <summary>
-    /// An <see cref="IResourceFilter"/> to verify the topic URL and short-circuit hub intent of subscriber verification request.
+    /// An <see cref="IAsyncResourceFilter"/> to verify the topic URL and short-circuit hub intent of subscriber verification request.
     /// </summary>
-    internal class WebSubWebHookIntentVerificationFilter : IAsyncResourceFilter, IOrderedFilter, IWebHookReceiver
+    internal class WebSubWebHookIntentVerificationFilter : IAsyncResourceFilter, IOrderedFilter
     {
         #region Fields
         private readonly ILogger _logger;
@@ -27,11 +27,6 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
         /// Gets the order value for determining the order of execution of filters. Filters execute in ascending numeric value of the <see cref="Order"/> property.
         /// </summary>
         public int Order => WebHookGetHeadRequestFilter.Order;
-
-        /// <summary>
-        /// Gets the case-insensitive name of the WebHook generator that this receiver supports.
-        /// </summary>
-        public string ReceiverName => WebSubConstants.ReceiverName;
         #endregion
 
         #region Constructor
@@ -50,21 +45,6 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
         #endregion
 
         #region Methods
-        /// <summary>
-        /// Gets an indication that this <see cref="IWebHookReceiver"/> should execute in the current request.
-        /// </summary>
-        /// <param name="receiverName">The name of an available <see cref="IWebHookReceiver"/>.</param>
-        /// <returns><see langword="true"/> if this <see cref="IWebHookReceiver"/> should execute; <see langword="false"/> otherwise.</returns>
-        public bool IsApplicable(string receiverName)
-        {
-            if (receiverName == null)
-            {
-                throw new ArgumentNullException(nameof(receiverName));
-            }
-
-            return String.Equals(ReceiverName, receiverName, StringComparison.OrdinalIgnoreCase);
-        }
-
         /// <summary>
         /// Called asynchronously before the rest of the pipeline.
         /// </summary>
@@ -85,7 +65,7 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
             }
             else
             {
-                ResourceExecutedContext resourceExecutedContext = await next();
+                await next();
             }
         }
 
