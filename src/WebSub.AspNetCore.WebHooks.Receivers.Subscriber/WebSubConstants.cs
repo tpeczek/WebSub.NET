@@ -18,6 +18,12 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber
 
         internal const string INTENT_DENY_REASON_QUERY_PARAMETER_NAME = "hub.reason";
 
+        internal const string SIGNATURE_HEADER_NAME = "X-Hub-Signature";
+        internal const string SIGNATURE_HEADER_SHA1_KEY = "sha1";
+        internal const string SIGNATURE_HEADER_SHA256_KEY = "sha256";
+        internal const string SIGNATURE_HEADER_SHA384_KEY = "sha384";
+        internal const string SIGNATURE_HEADER_SHA512_KEY = "sha512";
+
         /// <summary>
         /// Gets the name of the WebSub WebHook receiver.
         /// </summary>

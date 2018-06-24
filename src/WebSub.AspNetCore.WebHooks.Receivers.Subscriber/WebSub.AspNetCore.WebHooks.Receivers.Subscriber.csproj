@@ -27,4 +27,7 @@
   <ItemGroup>
     <ProjectReference Include="..\WebSub.AspNetCore.Services.Abstractions\WebSub.AspNetCore.Services.Abstractions.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Utilities\" />
+  </ItemGroup>
 </Project>
