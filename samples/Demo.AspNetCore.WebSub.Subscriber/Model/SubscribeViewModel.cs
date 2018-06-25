@@ -6,5 +6,7 @@ namespace Demo.AspNetCore.WebSub.Subscriber.Model
     {
         [Required]
         public string Url { get; set; }
+
+        public string Secret { get; set; }
     }
 }

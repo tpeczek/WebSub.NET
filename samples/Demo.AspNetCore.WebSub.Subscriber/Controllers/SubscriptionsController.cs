@@ -41,20 +41,25 @@ namespace Demo.AspNetCore.WebSub.Subscriber.Controllers
             try
             {
                 webSubSubscription = await _webSubSubscriptionsStore.CreateAsync();
-
-                webSubSubscription.HubUrl = (await webSubSubscriber.SubscribeAsync(
-                    new WebSubSubscribeParameters(subscribeViewModel.Url, webSubSubscription.CallbackUrl)
+                WebSubSubscribeParameters webSubSubscribeParameters = new WebSubSubscribeParameters(subscribeViewModel.Url, webSubSubscription.CallbackUrl)
+                {
+                    OnDiscoveredAsync = async (WebSubDiscoveredUrls discovery, CancellationToken cancellationToken) =>
                     {
-                        OnDiscoveredAsync = async (WebSubDiscoveredUrls discovery, CancellationToken cancellationToken) =>
-                        {
-                            webSubSubscription.State = WebSubSubscriptionState.SubscribeRequested;
-                            webSubSubscription.TopicUrl = discovery.Topic;
+                        webSubSubscription.State = WebSubSubscriptionState.SubscribeRequested;
+                        webSubSubscription.TopicUrl = discovery.Topic;
 
-                            await _webSubSubscriptionsStore.UpdateAsync(webSubSubscription);
-                        }
-                    },
-                    HttpContext.RequestAborted)
-                ).Hub;
+                        await _webSubSubscriptionsStore.UpdateAsync(webSubSubscription);
+                    }
+                };
+
+                if (!String.IsNullOrWhiteSpace(subscribeViewModel.Secret))
+                {
+                    webSubSubscription.Secret = subscribeViewModel.Secret;
+                    webSubSubscribeParameters.Secret = subscribeViewModel.Secret;
+                }
+                
+
+                webSubSubscription.HubUrl = (await webSubSubscriber.SubscribeAsync(webSubSubscribeParameters, HttpContext.RequestAborted)).Hub;
 
                 return new SubscriptionViewModel(webSubSubscription);
             }

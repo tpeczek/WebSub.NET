@@ -52,7 +52,10 @@ namespace Demo.AspNetCore.WebSub.Subscriber.Services
 
         public override Task RemoveAsync(WebSubSubscription subscription, CancellationToken cancellationToken)
         {
-            _store.TryRemove(subscription.Id, out _);
+            if (subscription != null)
+            {
+                _store.TryRemove(subscription.Id, out _);
+            }
 
             return Task.CompletedTask;
         }
