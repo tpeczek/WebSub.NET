@@ -13,8 +13,13 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.ApplicationModels
 {
     internal class WebSubBindingInfoProvider : IApplicationModelProvider
     {
-        #region Felds
-        private static readonly Type _webSubSubscriptionType = typeof(WebSubSubscription);
+        #region Fields
+        private static readonly Type _subscriptionType = typeof(WebSubSubscription);
+        private static readonly Type _httpContextItemsModelBinderType = typeof(HttpContextItemsModelBinder);
+
+        private static readonly Type _contentType = typeof(WebSubContent);
+        private static readonly Type _contentInterfaceType = typeof(IWebSubContent);
+        private static readonly Type _contentModelBinderType = typeof(WebSubContentModelBinder);
         #endregion
 
         #region Properties
@@ -45,7 +50,7 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.ApplicationModels
                     }
 
                     RemoveWebHookVerifyBodyTypeFilter(action);
-                    AddWebSubSubscriptionBindingInfo(action);
+                    AddParametersBindingInfos(action);
                 }
             }
         }
@@ -72,30 +77,39 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.ApplicationModels
             }
         }
 
-        private void AddWebSubSubscriptionBindingInfo(ActionModel action)
+        private void AddParametersBindingInfos(ActionModel action)
         {
             for (int parameterIndex = 0; parameterIndex < action.Parameters.Count; parameterIndex++)
             {
                 ParameterModel parameter = action.Parameters[parameterIndex];
 
-                if (_webSubSubscriptionType == parameter.ParameterType)
+                if (_subscriptionType == parameter.ParameterType)
                 {
-                    BindingInfo webSubSubscriptionBindingInfo = parameter.BindingInfo;
-
-                    if (webSubSubscriptionBindingInfo == null)
-                    {
-                        webSubSubscriptionBindingInfo = parameter.BindingInfo = new BindingInfo();
-                    }
-                    else if (webSubSubscriptionBindingInfo.BinderModelName != null || webSubSubscriptionBindingInfo.BinderType != null || webSubSubscriptionBindingInfo.BindingSource != null)
-                    {
-                        continue;
-                    }
-
-                    webSubSubscriptionBindingInfo.BindingSource = BindingSource.ModelBinding;
-                    webSubSubscriptionBindingInfo.BinderType = typeof(HttpContextItemsModelBinder);
-                    webSubSubscriptionBindingInfo.BinderModelName = WebSubConstants.HTTP_CONTEXT_ITEMS_SUBSCRIPTION_KEY;
+                    AddParameterBindingInfo(parameter, _httpContextItemsModelBinderType, WebSubConstants.HTTP_CONTEXT_ITEMS_SUBSCRIPTION_KEY);
+                }
+                else if ((_contentType == parameter.ParameterType) || (_contentInterfaceType == parameter.ParameterType))
+                {
+                    AddParameterBindingInfo(parameter, _contentModelBinderType, WebSubContent.MODEL_NAME);
                 }
             }
+        }
+
+        private void AddParameterBindingInfo(ParameterModel parameter, Type binderType, string binderModelName)
+        {
+            BindingInfo parameterBindingInfo = parameter.BindingInfo;
+
+            if (parameterBindingInfo == null)
+            {
+                parameterBindingInfo = parameter.BindingInfo = new BindingInfo();
+            }
+            else if (parameterBindingInfo.BinderModelName != null || parameterBindingInfo.BinderType != null || parameterBindingInfo.BindingSource != null)
+            {
+                return;
+            }
+
+            parameterBindingInfo.BindingSource = BindingSource.ModelBinding;
+            parameterBindingInfo.BinderType = binderType;
+            parameterBindingInfo.BinderModelName = binderModelName;
         }
         #endregion
     }
