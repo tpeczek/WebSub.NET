@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Lib.AspNetCore.ServerSentEvents;
+using WebSub.AspNetCore.Services;
 using WebSub.AspNetCore.WebHooks.Receivers.Subscriber;
 
 namespace Demo.AspNetCore.WebSub.Subscriber.Controllers
@@ -21,7 +22,7 @@ namespace Demo.AspNetCore.WebSub.Subscriber.Controllers
         #region Actions
         // "/api/webhooks/incoming/websub/{id}"
         [WebSubWebHook]
-        public async Task<IActionResult> HandlerForContentDistribution(string id)
+        public async Task<IActionResult> HandlerForContentDistribution(string id, WebSubSubscription subscription)
         {
             await _serverSentEventsService.SendEventAsync($"HandlerForContentDistribution ({id})");
 

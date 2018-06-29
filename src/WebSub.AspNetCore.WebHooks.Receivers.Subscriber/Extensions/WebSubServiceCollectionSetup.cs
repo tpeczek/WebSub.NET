@@ -1,9 +1,11 @@
 using System;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.WebHooks.Metadata;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters;
 using WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Metadata;
+using WebSub.AspNetCore.WebHooks.Receivers.Subscriber.ModelBinding;
 using WebSub.AspNetCore.WebHooks.Receivers.Subscriber.ApplicationModels;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -25,6 +27,11 @@ namespace Microsoft.Extensions.DependencyInjection
             }
 
             WebHookMetadata.Register<WebSubMetadata>(services);
+
+            services.Configure<MvcOptions>(options =>
+            {
+                options.ModelBinderProviders.Insert(0, new HttpContextItemsModelBinderProvider());
+            });
 
             services.TryAddEnumerable(ServiceDescriptor.Transient<IApplicationModelProvider, WebSubBindingInfoProvider>());
 
