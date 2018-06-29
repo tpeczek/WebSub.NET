@@ -1,8 +1,10 @@
 using System;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.WebHooks.Metadata;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters;
 using WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Metadata;
+using WebSub.AspNetCore.WebHooks.Receivers.Subscriber.ApplicationModels;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -23,6 +25,9 @@ namespace Microsoft.Extensions.DependencyInjection
             }
 
             WebHookMetadata.Register<WebSubMetadata>(services);
+
+            services.TryAddEnumerable(ServiceDescriptor.Transient<IApplicationModelProvider, WebSubBindingInfoProvider>());
+
             services.TryAddSingleton<WebSubWebHookSecurityFilter>();
             services.TryAddSingleton<WebSubWebHookIntentVerificationFilter>();
         }
