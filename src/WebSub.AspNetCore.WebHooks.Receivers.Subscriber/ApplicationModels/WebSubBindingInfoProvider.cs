@@ -91,8 +91,9 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.ApplicationModels
                         continue;
                     }
 
+                    webSubSubscriptionBindingInfo.BindingSource = BindingSource.ModelBinding;
+                    webSubSubscriptionBindingInfo.BinderType = typeof(HttpContextItemsModelBinder);
                     webSubSubscriptionBindingInfo.BinderModelName = WebSubConstants.HTTP_CONTEXT_ITEMS_SUBSCRIPTION_KEY;
-                    webSubSubscriptionBindingInfo.BindingSource = HttpContextItemsModelBinderProvider.HttpContextItemsSource;
                 }
             }
         }

@@ -28,11 +28,6 @@ namespace Microsoft.Extensions.DependencyInjection
 
             WebHookMetadata.Register<WebSubMetadata>(services);
 
-            services.Configure<MvcOptions>(options =>
-            {
-                options.ModelBinderProviders.Insert(0, new HttpContextItemsModelBinderProvider());
-            });
-
             services.TryAddEnumerable(ServiceDescriptor.Transient<IApplicationModelProvider, WebSubBindingInfoProvider>());
 
             services.TryAddSingleton<WebSubWebHookSecurityFilter>();
