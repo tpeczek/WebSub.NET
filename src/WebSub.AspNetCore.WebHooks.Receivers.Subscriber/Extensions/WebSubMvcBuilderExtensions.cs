@@ -23,7 +23,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
             WebSubServiceCollectionSetup.AddWebSubServices(builder.Services);
 
-            return builder.AddWebHooks();
+            return builder
+                .AddXmlSerializerFormatters()
+                .AddWebHooks();
         }
     }
 }
