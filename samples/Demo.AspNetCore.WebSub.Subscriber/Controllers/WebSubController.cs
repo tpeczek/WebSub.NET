@@ -24,8 +24,6 @@ namespace Demo.AspNetCore.WebSub.Subscriber.Controllers
         [WebSubWebHook]
         public async Task<IActionResult> HandlerForContentDistribution(string id, WebSubSubscription subscription, IWebSubContent content)
         {
-            string contentAsString = await content.ReadAsStringAsync();
-
             await _serverSentEventsService.SendEventAsync($"HandlerForContentDistribution ({id})");
 
             return Ok();

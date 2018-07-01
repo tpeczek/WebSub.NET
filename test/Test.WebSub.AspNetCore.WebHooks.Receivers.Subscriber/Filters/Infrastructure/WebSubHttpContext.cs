@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using System.Security.Claims;
 using System.Collections.Generic;
@@ -42,8 +43,8 @@ namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters.Infrastru
             RequestServices = requestServices;
         }
 
-        public WebSubHttpContext(string method, IServiceProvider requestServices = null)
-            : this(new WebSubHttpRequest(method), requestServices)
+        public WebSubHttpContext(string method, Stream body = null, IServiceProvider requestServices = null)
+            : this(new WebSubHttpRequest(method, body), requestServices)
         { }
 
         public override void Abort()
