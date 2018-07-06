@@ -14,17 +14,6 @@ namespace Demo.AspNetCore.WebSub.Subscriber.Services
         #endregion
 
         #region Constructor
-        static MemoryWebSubSubscriptionsStore()
-        {
-            _store.TryAdd("73481a8e-c9ee-4ec4-89e3-b25b3179ae92", new WebSubSubscription
-            {
-                Id = "73481a8e-c9ee-4ec4-89e3-b25b3179ae92",
-                State = WebSubSubscriptionState.SubscribeRequested,
-                CallbackUrl = "https://localhost:5001/api/webhooks/incoming/websub/73481a8e-c9ee-4ec4-89e3-b25b3179ae92",
-                TopicUrl = "https://websub.rocks/blog/100/yikxg9xINdT3Woe0lbNo"
-            });
-        }
-
         public MemoryWebSubSubscriptionsStore(IHttpContextAccessor httpContextAccessor)
             : base(httpContextAccessor)
         { }

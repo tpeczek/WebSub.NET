@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace WebSub.AspNetCore.Services.EntityFrameworkCore
 {
@@ -7,6 +8,11 @@ namespace WebSub.AspNetCore.Services.EntityFrameworkCore
     /// </summary>
     public class WebSubDbContext : DbContext
     {
+        /// <summary>
+        /// Gets or sets the <see cref="DbSet{TEntity}"/> of <see cref="WebSubSubscription"/>.
+        /// </summary>
+        public DbSet<WebSubSubscription> Subscriptions { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>
@@ -17,5 +23,16 @@ namespace WebSub.AspNetCore.Services.EntityFrameworkCore
         /// Initializes a new instance of the class.
         /// </summary>
         protected WebSubDbContext() { }
+
+        /// <inheritdoc />
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            EntityTypeBuilder<WebSubSubscription> subscriptionEntityTypeBuilder = modelBuilder.Entity<WebSubSubscription>();
+
+            subscriptionEntityTypeBuilder.HasKey(e => e.Id);
+            subscriptionEntityTypeBuilder.Property(e => e.Id).ValueGeneratedNever();
+
+            subscriptionEntityTypeBuilder.HasIndex(e => e.CallbackUrl).IsUnique();
+        }
     }
 }

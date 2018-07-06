@@ -2,23 +2,41 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Lib.AspNetCore.ServerSentEvents;
 using WebSub.AspNetCore.Services;
 using WebSub.Net.Http.Subscriber;
+using Demo.AspNetCore.WebSub.Subscriber.Model;
 using Demo.AspNetCore.WebSub.Subscriber.Services;
 
 namespace Demo.AspNetCore.WebSub.Subscriber
 {
     public class Startup
     {
+        private const string SQLITE_CONNECTION_STRING_NAME = "ApplicationSqliteDatabase";
+
+        private IConfiguration Configuration { get; }
+
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHttpClient<WebSubSubscriber>();
 
             services.AddServerSentEvents();
 
-            services.AddWebSubSubscriptionStore<MemoryWebSubSubscriptionsStore>();
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlite(Configuration.GetConnectionString(SQLITE_CONNECTION_STRING_NAME))
+            );
+            services.AddEntityFrameworkWebSubSubscriptionStore<ApplicationDbContext>();
+
+            //services.AddWebSubSubscriptionStore<MemoryWebSubSubscriptionsStore>();
+
             services.AddSingleton<IWebSubSubscriptionsService, ServerSentEventWebSubSubscriptionsService>();
 
             services.AddMvc()
@@ -33,6 +51,8 @@ namespace Demo.AspNetCore.WebSub.Subscriber
                 app.UseDeveloperExceptionPage();
             }
 
+            EnsureDatabaseCreated(app);
+
             app.MapServerSentEvents("/sse/webhooks/incoming/websub");
 
             app.UseStaticFiles();
@@ -46,6 +66,20 @@ namespace Demo.AspNetCore.WebSub.Subscriber
             {
                 await context.Response.WriteAsync("-- Demo.AspNetCore.WebSub.Subscriber --");
             });
+        }
+
+        private static IApplicationBuilder EnsureDatabaseCreated(IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                ApplicationDbContext context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
+                if (context != null)
+                {
+                    context.Database.EnsureCreated();
+                }
+            }
+
+            return app;
         }
     }
 }

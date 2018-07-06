@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace WebSub.AspNetCore.Services.EntityFrameworkCore
 {
@@ -22,29 +19,39 @@ namespace WebSub.AspNetCore.Services.EntityFrameworkCore
         #endregion
 
         #region Methods
-        public override Task<WebSubSubscription> CreateAsync(CancellationToken cancellationToken)
+        public override async Task<WebSubSubscription> CreateAsync(CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            WebSubSubscription subscription = CreateInitializedWebSubSubscription();
+
+            _webSubDbContext.Subscriptions.Add(subscription);
+
+            await _webSubDbContext.SaveChangesAsync(cancellationToken);
+
+            return subscription;
         }
 
-        public override Task RemoveAsync(string id, CancellationToken cancellationToken)
+        public override async Task RemoveAsync(string id, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            WebSubSubscription subscription = await RetrieveAsync(id, cancellationToken);
+
+            await RemoveAsync(subscription, cancellationToken);
         }
 
         public override Task RemoveAsync(WebSubSubscription subscription, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            _webSubDbContext.Subscriptions.Remove(subscription);
+
+            return _webSubDbContext.SaveChangesAsync(cancellationToken);
         }
 
         public override Task<WebSubSubscription> RetrieveAsync(string id, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return _webSubDbContext.Subscriptions.FindAsync(id, cancellationToken);
         }
 
         public override Task UpdateAsync(WebSubSubscription subscription, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return _webSubDbContext.SaveChangesAsync(cancellationToken);
         }
         #endregion
     }
