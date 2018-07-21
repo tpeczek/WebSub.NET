@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Description>ASP.NET Core WebSub services abstractions.</Description>
     <Copyright>Copyright © 2018 Tomasz Pęczek</Copyright>
-    <VersionPrefix>0.0.1-alpha</VersionPrefix>
+    <VersionPrefix>1.0.0-preview1</VersionPrefix>
     <Authors>Tomasz Pęczek</Authors>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyTitle>WebSub.AspNetCore.Services.Abstractions</AssemblyTitle>

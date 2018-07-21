@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Description>WebSub subscriber.</Description>
+    <Description>WebSub.Net.Http.Subscriber is a library which provides a WebSub subscriber.</Description>
     <Copyright>Copyright © 2018 Tomasz Pęczek</Copyright>
-    <VersionPrefix>0.0.1-alpha</VersionPrefix>
+    <VersionPrefix>1.0.0-preview1</VersionPrefix>
     <Authors>Tomasz Pęczek</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyTitle>WebSub.Net.Http.Subscriber</AssemblyTitle>

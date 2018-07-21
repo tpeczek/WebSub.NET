@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Description>ASP.NET Core WebSub services implementation that uses Entity Framework Core.</Description>
     <Copyright>Copyright © 2018 Tomasz Pęczek</Copyright>
-    <VersionPrefix>0.0.1-alpha</VersionPrefix>
+    <VersionPrefix>1.0.0-preview1</VersionPrefix>
     <Authors>Tomasz Pęczek</Authors>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyTitle>WebSub.AspNetCore.Services.EntityFrameworkCore</AssemblyTitle>
@@ -24,6 +24,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.0" />
+    <!--<PackageReference Include="WebSub.AspNetCore.Services.Abstractions" Version="1.0.0-preview1" />-->
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WebSub.AspNetCore.Services.Abstractions\WebSub.AspNetCore.Services.Abstractions.csproj" />
