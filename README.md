@@ -2,9 +2,9 @@
 
 WebSub.NET is a set of libraries which aim at providing [WebSub](https://www.w3.org/TR/websub/) (a common mechanism for communication between publishers and subscribers of Web content) support for .NET platform.
 
-## Previews
+## WebSub.NET Subscriber Preview
 
-WebSub.NET is currently in preview.
+WebSub.NET Subscriber is currently in preview.
 
 - The WebSub subscriber preview package is available on NuGet and MyGet.
 - The ASP.NET Core WebHooks WebSub subscriber receiver is available on MyGet.
@@ -17,7 +17,7 @@ In order to use packages from MyGget you need to add a NuGet.Config to your app 
     <packageSources>
         <clear />
         <add key="dotnet-core.myget.org" value="https://dotnet.myget.org/F/dotnet-core/api/v3/index.json" />
-		<add key="websubdotnet.myget.org" value="https://www.myget.org/F/websubdotnet/api/v3/index.json" />
+	<add key="websubdotnet.myget.org" value="https://www.myget.org/F/websubdotnet/api/v3/index.json" />
         <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
     </packageSources>
 </configuration>
