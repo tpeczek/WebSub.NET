@@ -1,0 +1,20 @@
+﻿<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>WebSub.AspNet.WebHooks.Receivers.Subscriber</id>
+    <version>1.0.0-preview1</version>
+    <title>WebSub.AspNet.WebHooks.Receivers.Subscriber</title>
+    <authors>Tomasz Pęczek</authors>
+    <owners>Tomasz Pęczek</owners>
+    <licenseUrl>https://github.com/tpeczek/WebSub.NET/blob/master/LICENSE.md</licenseUrl>
+    <projectUrl>https://github.com/tpeczek/WebSub.NET</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>ASP.NET WebSub subscriber receiver WebHooks infrastructure. Contains the WebSubWebHookReceiver class.</description>
+    <copyright>Copyright © 2018 Tomasz Pęczek</copyright>
+	<dependencies>
+      <dependency id="Microsoft.AspNet.WebApi.Core" version="5.2.2" />
+      <dependency id="Microsoft.AspNet.WebHooks.Common" version="1.2.0" />
+      <dependency id="Microsoft.AspNet.WebHooks.Receivers" version="1.2.0" />
+    </dependencies>
+  </metadata>
+</package>
