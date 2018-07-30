@@ -25,7 +25,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSub.AspNetCore.Services.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.AspNet.WebSub.Subscriber", "samples\Demo.AspNet.WebSub.Subscriber\Demo.AspNet.WebSub.Subscriber.csproj", "{4F9C8210-0E09-4266-AB51-A03594F832E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSub.AspNet.WebHooks.Receivers.Subscriber", "src\WebSub.AspNet.WebHooks.Receivers.Subscriber\WebSub.AspNet.WebHooks.Receivers.Subscriber.csproj", "{7436B4A3-18B3-4EF6-847E-5B3ABDFBE7A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSub.AspNet.WebHooks.Receivers.Subscriber", "src\WebSub.AspNet.WebHooks.Receivers.Subscriber\WebSub.AspNet.WebHooks.Receivers.Subscriber.csproj", "{7436B4A3-18B3-4EF6-847E-5B3ABDFBE7A6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.WebSub.AspNet.WebHooks.Receivers.Subscriber", "test\Test.WebSub.AspNet.WebHooks.Receivers.Subscriber\Test.WebSub.AspNet.WebHooks.Receivers.Subscriber.csproj", "{8EF2CA48-44B4-4D01-BDFB-63305C90F28B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +71,10 @@ Global
 		{7436B4A3-18B3-4EF6-847E-5B3ABDFBE7A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7436B4A3-18B3-4EF6-847E-5B3ABDFBE7A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7436B4A3-18B3-4EF6-847E-5B3ABDFBE7A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EF2CA48-44B4-4D01-BDFB-63305C90F28B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EF2CA48-44B4-4D01-BDFB-63305C90F28B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EF2CA48-44B4-4D01-BDFB-63305C90F28B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EF2CA48-44B4-4D01-BDFB-63305C90F28B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -83,6 +89,7 @@ Global
 		{58A2F3FB-DE63-49E8-8422-D8BF983DB04B} = {C0459CD6-0305-4671-BA3C-66A391F6D47C}
 		{4F9C8210-0E09-4266-AB51-A03594F832E4} = {E9DE4F00-A9FE-416D-9C86-419EF0C0B9E1}
 		{7436B4A3-18B3-4EF6-847E-5B3ABDFBE7A6} = {C0459CD6-0305-4671-BA3C-66A391F6D47C}
+		{8EF2CA48-44B4-4D01-BDFB-63305C90F28B} = {3F3D32A7-4559-4FFC-895A-63B2B85C6909}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F3CB0910-00C8-439B-8A1D-E7C4F7DD0190}
