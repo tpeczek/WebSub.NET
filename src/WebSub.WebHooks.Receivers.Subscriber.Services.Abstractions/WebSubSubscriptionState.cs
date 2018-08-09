@@ -1,4 +1,4 @@
-﻿namespace WebSub.AspNetCore.Services
+﻿namespace WebSub.WebHooks.Receivers.Subscriber.Services
 {
     /// <summary>
     /// The <see cref="WebSubSubscription"/> states.

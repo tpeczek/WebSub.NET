@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WebSub.AspNetCore.Services
+namespace WebSub.WebHooks.Receivers.Subscriber.Services
 {
     /// <summary>
     /// Represents a WebSub subscription.

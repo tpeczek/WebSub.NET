@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using WebSub.WebHooks.Receivers.Subscriber.Services;
 
-namespace WebSub.AspNetCore.Services.EntityFrameworkCore
+namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.EntityFrameworkCore
 {
     /// <summary>
     /// Base class for the Entity Framework database context used for WebSub.

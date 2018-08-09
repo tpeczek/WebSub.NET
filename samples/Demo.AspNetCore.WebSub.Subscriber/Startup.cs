@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Lib.AspNetCore.ServerSentEvents;
-using WebSub.AspNetCore.Services;
 using WebSub.Net.Http.Subscriber;
+using WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services;
 using Demo.AspNetCore.WebSub.Subscriber.Model;
 using Demo.AspNetCore.WebSub.Subscriber.Services;
 

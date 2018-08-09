@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using WebSub.AspNetCore.Services;
-using WebSub.AspNetCore.Services.EntityFrameworkCore;
+using WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.EntityFrameworkCore;
 
 namespace Microsoft.AspNetCore.Builder
 {

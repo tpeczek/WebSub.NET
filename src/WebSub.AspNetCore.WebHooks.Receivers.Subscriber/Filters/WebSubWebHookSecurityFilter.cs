@@ -16,7 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
-using WebSub.AspNetCore.Services;
+using WebSub.WebHooks.Receivers.Subscriber.Services;
 
 namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
 {

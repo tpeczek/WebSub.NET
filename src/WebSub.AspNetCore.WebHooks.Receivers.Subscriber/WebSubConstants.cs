@@ -1,3 +1,5 @@
+using WebSub.WebHooks.Receivers.Subscriber.Services;
+
 namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber
 {
     /// <summary>
@@ -5,7 +7,7 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber
     /// </summary>
     public static class WebSubConstants
     {
-        internal const string HTTP_CONTEXT_ITEMS_SUBSCRIPTION_KEY = "WebSub.AspNetCore.WebHooks.Receivers.Subscriber-" + nameof(Services.WebSubSubscription);
+        internal const string HTTP_CONTEXT_ITEMS_SUBSCRIPTION_KEY = "WebSub.AspNetCore.WebHooks.Receivers.Subscriber-" + nameof(WebSubSubscription);
         internal const string MODE_QUERY_PARAMETER_NAME = "hub.mode";
         internal const string TOPIC_QUERY_PARAMETER_NAME = "hub.topic";
 

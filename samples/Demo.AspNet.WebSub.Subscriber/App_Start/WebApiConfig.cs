@@ -1,4 +1,8 @@
 ﻿using System.Web.Http;
+using Unity;
+using Unity.Lifetime;
+using WebSub.WebHooks.Receivers.Subscriber.Services;
+using Demo.AspNet.WebSub.Subscriber.Services;
 
 namespace Demo.AspNet.WebSub.Subscriber
 {
@@ -6,7 +10,10 @@ namespace Demo.AspNet.WebSub.Subscriber
     {
         public static void Register(HttpConfiguration config)
         {
-            // Web API configuration and services
+            // Web API services
+            UnityContainer container = new UnityContainer();
+            container.RegisterType<IWebSubSubscriptionsStore, MemoryWebSubSubscriptionsStore>(new HierarchicalLifetimeManager());
+            config.DependencyResolver = new UnityDependencyResolver(container);
 
             // Web API routes
             config.MapHttpAttributeRoutes();

@@ -11,6 +11,7 @@ namespace System.Web.Http
     {
         /// <summary>
         /// Initializes support for receiving WebSub WebHooks.
+        /// The corresponding WebHook URI is of the form '<c>https://&lt;host&gt;/api/webhooks/incoming/websub/{id}</c>'.
         /// </summary>
         /// <param name="config">The current <see cref="HttpConfiguration"/>config.</param>
         public static void InitializeReceiveWebSubWebHooks(this HttpConfiguration config)

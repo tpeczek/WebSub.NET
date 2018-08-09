@@ -25,9 +25,11 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Xml" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.WebHooks.Receivers" Version="1.0.0-preview3-final" />
-    <!--<PackageReference Include="WebSub.AspNetCore.Services.Abstractions" Version="1.0.0-preview1" />-->
+    <!--<PackageReference Include="WebSub.WebHooks.Receivers.Subscriber.Services.Abstractions" Version="1.0.0-preview1" />-->
+    <!--<PackageReference Include="WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.Abstractions" Version="1.0.0-preview1" />-->
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WebSub.AspNetCore.Services.Abstractions\WebSub.AspNetCore.Services.Abstractions.csproj" />
+    <ProjectReference Include="..\WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.Abstractions\WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.Abstractions.csproj" />
+    <ProjectReference Include="..\WebSub.WebHooks.Receivers.Subscriber.Services.Abstractions\WebSub.WebHooks.Receivers.Subscriber.Services.Abstractions.csproj" />
   </ItemGroup>
 </Project>

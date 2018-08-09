@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Description>ASP.NET Core WebSub services abstractions.</Description>
+    <Description>ASP.NET Core WebSub subscriber receiver WebHooks services implementation that uses Entity Framework Core.</Description>
     <Copyright>Copyright © 2018 Tomasz Pęczek</Copyright>
     <VersionPrefix>1.0.0-preview1</VersionPrefix>
     <Authors>Tomasz Pęczek</Authors>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyTitle>WebSub.AspNetCore.Services.Abstractions</AssemblyTitle>
-    <AssemblyName>WebSub.AspNetCore.Services.Abstractions</AssemblyName>
-    <PackageId>WebSub.AspNetCore.Services.Abstractions</PackageId>
+    <AssemblyTitle>WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.EntityFrameworkCore</AssemblyTitle>
+    <AssemblyName>WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.EntityFrameworkCore</AssemblyName>
+    <PackageId>WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.EntityFrameworkCore</PackageId>
     <PackageTags></PackageTags>
     <PackageProjectUrl>https://github.com/tpeczek/WebSub.NET</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/tpeczek/WebSub.NET/blob/master/LICENSE.md</PackageLicenseUrl>
@@ -23,5 +23,12 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.0" />
+    <!--<PackageReference Include="WebSub.WebHooks.Receivers.Subscriber.Services.Abstractions" Version="1.0.0-preview1" />-->
+    <!--<PackageReference Include="WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.Abstractions" Version="1.0.0-preview1" />-->
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.Abstractions\WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.Abstractions.csproj" />
+    <ProjectReference Include="..\WebSub.WebHooks.Receivers.Subscriber.Services.Abstractions\WebSub.WebHooks.Receivers.Subscriber.Services.Abstractions.csproj" />
   </ItemGroup>
 </Project>

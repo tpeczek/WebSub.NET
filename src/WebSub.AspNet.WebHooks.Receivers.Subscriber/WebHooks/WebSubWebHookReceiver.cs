@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http.Controllers;
 using Microsoft.AspNet.WebHooks;
+using WebSub.WebHooks.Receivers.Subscriber.Services;
 
 namespace WebSub.AspNet.WebHooks.Receivers.Subscriber.WebHooks
 {
@@ -38,7 +41,53 @@ namespace WebSub.AspNet.WebHooks.Receivers.Subscriber.WebHooks
         /// allows an <see cref="IWebHookReceiver"/> to support multiple WebHooks with individual configurations.</param>
         /// <param name="context">The <see cref="HttpRequestContext"/> for the incoming request.</param>
         /// <param name="request">The <see cref="HttpRequestMessage"/> containing the incoming WebHook.</param>
-        public override Task<HttpResponseMessage> ReceiveAsync(string id, HttpRequestContext context, HttpRequestMessage request)
+        public override async Task<HttpResponseMessage> ReceiveAsync(string id, HttpRequestContext context, HttpRequestMessage request)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+
+            WebSubSubscription subscription = await RetrieveWebSubSubscriptionAsync(request, id);
+            if (subscription != null)
+            {
+                if (request.Method == HttpMethod.Get)
+                {
+                    return await HandleIntentVerificationAsync(subscription, request);
+                }
+                else if (request.Method == HttpMethod.Post)
+                {
+                    return await ExecuteWebHookAsync(id, context, request, Enumerable.Empty<string>(), null);
+                }
+                else
+                {
+                    return CreateBadMethodResponse(request);
+                }
+            }
+            else
+            {
+                return request.CreateErrorResponse(HttpStatusCode.NotFound, String.Empty);
+            }
+        }
+
+        private static Task<WebSubSubscription> RetrieveWebSubSubscriptionAsync(HttpRequestMessage request, string subscriptionId)
+        {
+            IWebSubSubscriptionsStore subscriptionsStore = request.GetConfiguration().DependencyResolver.GetService<IWebSubSubscriptionsStore>();
+
+            return subscriptionsStore.RetrieveAsync(subscriptionId);
+        }
+
+        private static Task<HttpResponseMessage> HandleIntentVerificationAsync(WebSubSubscription subscription, HttpRequestMessage request)
         {
             throw new NotImplementedException();
         }

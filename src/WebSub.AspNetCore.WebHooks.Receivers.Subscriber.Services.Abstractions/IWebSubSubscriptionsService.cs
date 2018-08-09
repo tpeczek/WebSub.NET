@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
+using WebSub.WebHooks.Receivers.Subscriber.Services;
 
-namespace WebSub.AspNetCore.Services
+namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services
 {
     /// <summary>
     /// An interface representing service for WebSub subcriptions

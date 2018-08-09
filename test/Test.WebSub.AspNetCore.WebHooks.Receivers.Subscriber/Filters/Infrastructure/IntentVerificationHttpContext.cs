@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Threading;
-using System.Security.Claims;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Http.Authentication;
-using WebSub.AspNetCore.Services;
+using WebSub.WebHooks.Receivers.Subscriber.Services;
 
 namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters.Infrastructure
 {

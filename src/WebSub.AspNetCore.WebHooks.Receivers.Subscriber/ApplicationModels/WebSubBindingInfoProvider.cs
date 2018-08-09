@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.WebHooks.Filters;
 using Microsoft.AspNetCore.WebHooks.ApplicationModels;
-using WebSub.AspNetCore.Services;
+using WebSub.WebHooks.Receivers.Subscriber.Services;
 using WebSub.AspNetCore.WebHooks.Receivers.Subscriber.ModelBinding;
 
 namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.ApplicationModels
