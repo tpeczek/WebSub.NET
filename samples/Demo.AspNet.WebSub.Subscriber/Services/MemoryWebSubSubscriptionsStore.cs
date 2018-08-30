@@ -9,6 +9,7 @@ namespace Demo.AspNet.WebSub.Subscriber.Services
     internal class MemoryWebSubSubscriptionsStore : IWebSubSubscriptionsStore
     {
         #region Fields
+        private static readonly Task _completedTask = Task.FromResult(true);
         private static readonly ConcurrentDictionary<string, WebSubSubscription> _store = new ConcurrentDictionary<string, WebSubSubscription>();
         #endregion
 
@@ -62,12 +63,12 @@ namespace Demo.AspNet.WebSub.Subscriber.Services
 
         public Task UpdateAsync(WebSubSubscription subscription)
         {
-            throw new NotImplementedException();
+            return UpdateAsync(subscription, CancellationToken.None);
         }
 
         public Task UpdateAsync(WebSubSubscription subscription, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return _completedTask;
         }
         #endregion
     }
