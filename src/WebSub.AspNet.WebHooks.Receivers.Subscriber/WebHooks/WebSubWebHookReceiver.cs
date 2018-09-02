@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http.Controllers;
 using Microsoft.AspNet.WebHooks;
@@ -30,6 +32,12 @@ namespace WebSub.AspNet.WebHooks.Receivers.Subscriber.WebHooks
         private const string INTENT_VERIFICATION_LEASE_SECONDS_QUERY_PARAMETER_NAME = "hub.lease_seconds";
 
         private const string INTENT_DENY_REASON_QUERY_PARAMETER_NAME = "hub.reason";
+
+        internal const string SIGNATURE_HEADER_NAME = "X-Hub-Signature";
+        internal const string SIGNATURE_HEADER_SHA1_KEY = "sha1";
+        internal const string SIGNATURE_HEADER_SHA256_KEY = "sha256";
+        internal const string SIGNATURE_HEADER_SHA384_KEY = "sha384";
+        internal const string SIGNATURE_HEADER_SHA512_KEY = "sha512";
         #endregion
 
         #region Properties
@@ -81,6 +89,12 @@ namespace WebSub.AspNet.WebHooks.Receivers.Subscriber.WebHooks
                 }
                 else if (request.Method == HttpMethod.Post)
                 {
+                    HttpResponseMessage contentDistributionVerificationResponse = await VerifyContentDistribution(subscription, request);
+                    if (contentDistributionVerificationResponse != null)
+                    {
+                        return contentDistributionVerificationResponse;
+                    }
+
                     return await ExecuteWebHookAsync(id, context, request, Enumerable.Empty<string>(), null);
                 }
                 else
@@ -90,7 +104,7 @@ namespace WebSub.AspNet.WebHooks.Receivers.Subscriber.WebHooks
             }
             else
             {
-                return request.CreateErrorResponse(HttpStatusCode.NotFound, String.Empty);
+                return request.CreateResponse(HttpStatusCode.NotFound);
             }
         }
 
@@ -167,7 +181,7 @@ namespace WebSub.AspNet.WebHooks.Receivers.Subscriber.WebHooks
             else
             {
                 request.GetWebHooksLogger().Info($"Received a subscribe intent verification request for the '{ReceiverName}' WebHook receiver -- verification failed, returning challenge response.");
-                return request.CreateErrorResponse(HttpStatusCode.NotFound, String.Empty);
+                return request.CreateResponse(HttpStatusCode.NotFound);
             }
         }
 
@@ -221,7 +235,7 @@ namespace WebSub.AspNet.WebHooks.Receivers.Subscriber.WebHooks
             else
             {
                 request.GetWebHooksLogger().Info($"Received an unsubscribe intent verification request for the '{ReceiverName}' WebHook receiver -- verification failed, returning challenge response.");
-                return request.CreateErrorResponse(HttpStatusCode.NotFound, String.Empty);
+                return request.CreateResponse(HttpStatusCode.NotFound);
             }
         }
 
@@ -259,19 +273,113 @@ namespace WebSub.AspNet.WebHooks.Receivers.Subscriber.WebHooks
             return HandleBadRequest(request, $"A '{ReceiverName}' WebHook intent verification request must contain a '{parameterName}' query parameter.");
         }
 
-        private static HttpResponseMessage HandleBadRequest(HttpRequestMessage request, string message)
-        {
-            request.GetWebHooksLogger().Warn(message);
-
-            return request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
-        }
-
         private static HttpResponseMessage CreateChallengeResponse(string challenge)
         {
             return new HttpResponseMessage(HttpStatusCode.OK)
             {
                 Content = new StringContent(challenge, System.Text.Encoding.UTF8, "text/plain")
             };
+        }
+
+        private async Task<HttpResponseMessage> VerifyContentDistribution(WebSubSubscription subscription, HttpRequestMessage request)
+        {
+            if (subscription.State != WebSubSubscriptionState.SubscribeValidated)
+            {
+                return request.CreateResponse(HttpStatusCode.NotFound);
+            }
+
+            if (String.IsNullOrWhiteSpace(subscription.Secret))
+            {
+                return null;
+            }
+
+            string signatureHeader = GetRequestHeader(request, SIGNATURE_HEADER_NAME);
+
+            string[] tokens = signatureHeader.SplitAndTrim('=');
+            if (tokens.Length != 2)
+            {
+                return HandleInvalidSignatureHeader(request);
+            }
+
+            byte[] signatureHeaderExpectedHash;
+            try
+            {
+                signatureHeaderExpectedHash = EncodingUtilities.FromHex(tokens[1]);
+
+            }
+            catch (Exception)
+            {
+                return HandleBadRequest(request, $"The '{SIGNATURE_HEADER_NAME}' header value is invalid. The '{RECEIVER_NAME}' WebHook receiver requires a valid hex-encoded string.");
+            }
+
+            byte[] payloadActualHash = await ComputeRequestBodyHashAsync(request, tokens[0], Encoding.UTF8.GetBytes(subscription.Secret));
+            if (payloadActualHash == null)
+            {
+                return HandleInvalidSignatureHeader(request);
+            }
+
+            if (!SecretEqual(signatureHeaderExpectedHash, payloadActualHash))
+            {
+                return HandleBadRequest(request, $"The signature provided by the '{SIGNATURE_HEADER_NAME}' header field does not match the value expected by the '{RECEIVER_NAME}' WebHook receiver. WebHook request is invalid.");
+            }
+
+            return null;
+        }
+
+        private static Task<byte[]> ComputeRequestBodyHashAsync(HttpRequestMessage request, string signatureHeaderKey, byte[] secret)
+        {
+            if (String.Equals(signatureHeaderKey, SIGNATURE_HEADER_SHA1_KEY, StringComparison.OrdinalIgnoreCase))
+            {
+                using (HMACSHA1 hasher = new HMACSHA1(secret))
+                {
+                    return ComputeRequestBodyHmacHashAsync(request, hasher);
+                }
+            }
+
+            if (String.Equals(signatureHeaderKey, SIGNATURE_HEADER_SHA256_KEY, StringComparison.OrdinalIgnoreCase))
+            {
+                using (HMACSHA256 hasher = new HMACSHA256(secret))
+                {
+                    return ComputeRequestBodyHmacHashAsync(request, hasher);
+                }
+            }
+
+            if (String.Equals(signatureHeaderKey, SIGNATURE_HEADER_SHA384_KEY, StringComparison.OrdinalIgnoreCase))
+            {
+                using (HMACSHA384 hasher = new HMACSHA384(secret))
+                {
+                    return ComputeRequestBodyHmacHashAsync(request, hasher);
+                }
+            }
+
+            if (String.Equals(signatureHeaderKey, SIGNATURE_HEADER_SHA512_KEY, StringComparison.OrdinalIgnoreCase))
+            {
+                using (HMACSHA512 hasher = new HMACSHA512(secret))
+                {
+                    return ComputeRequestBodyHmacHashAsync(request, hasher);
+                }
+            }
+
+            return null;
+        }
+
+        private static async Task<byte[]> ComputeRequestBodyHmacHashAsync(HttpRequestMessage request, HMAC hasher)
+        {
+            byte[] requestBody = await request.Content.ReadAsByteArrayAsync();
+
+            return hasher.ComputeHash(requestBody);
+        }
+
+        private static HttpResponseMessage HandleInvalidSignatureHeader(HttpRequestMessage request)
+        {
+            return HandleBadRequest(request, $"Invalid '{SIGNATURE_HEADER_NAME}' header value. Expecting a value of '{SIGNATURE_HEADER_SHA1_KEY}|{SIGNATURE_HEADER_SHA256_KEY}|{SIGNATURE_HEADER_SHA384_KEY}|{SIGNATURE_HEADER_SHA512_KEY}=<value>'.");
+        }
+
+        private static HttpResponseMessage HandleBadRequest(HttpRequestMessage request, string message)
+        {
+            request.GetWebHooksLogger().Warn(message);
+
+            return request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
         }
         #endregion
     }
