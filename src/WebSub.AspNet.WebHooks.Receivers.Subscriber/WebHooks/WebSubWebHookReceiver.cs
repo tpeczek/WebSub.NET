@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Http;
 using System.Web.Http.Controllers;
 using Microsoft.AspNet.WebHooks;
 using WebSub.AspNet.WebHooks.Receivers.Subscriber.Extensions;
@@ -293,7 +294,16 @@ namespace WebSub.AspNet.WebHooks.Receivers.Subscriber.WebHooks
                 return null;
             }
 
-            string signatureHeader = GetRequestHeader(request, SIGNATURE_HEADER_NAME);
+            string signatureHeader;
+
+            try
+            {
+                signatureHeader = GetRequestHeader(request, SIGNATURE_HEADER_NAME);
+            }
+            catch (HttpResponseException)
+            {
+                return HandleInvalidSignatureHeader(request);
+            }
 
             string[] tokens = signatureHeader.SplitAndTrim('=');
             if (tokens.Length != 2)
@@ -326,13 +336,13 @@ namespace WebSub.AspNet.WebHooks.Receivers.Subscriber.WebHooks
             return null;
         }
 
-        private static Task<byte[]> ComputeRequestBodyHashAsync(HttpRequestMessage request, string signatureHeaderKey, byte[] secret)
+        private static async Task<byte[]> ComputeRequestBodyHashAsync(HttpRequestMessage request, string signatureHeaderKey, byte[] secret)
         {
             if (String.Equals(signatureHeaderKey, SIGNATURE_HEADER_SHA1_KEY, StringComparison.OrdinalIgnoreCase))
             {
                 using (HMACSHA1 hasher = new HMACSHA1(secret))
                 {
-                    return ComputeRequestBodyHmacHashAsync(request, hasher);
+                    return await ComputeRequestBodyHmacHashAsync(request, hasher);
                 }
             }
 
@@ -340,7 +350,7 @@ namespace WebSub.AspNet.WebHooks.Receivers.Subscriber.WebHooks
             {
                 using (HMACSHA256 hasher = new HMACSHA256(secret))
                 {
-                    return ComputeRequestBodyHmacHashAsync(request, hasher);
+                    return await ComputeRequestBodyHmacHashAsync(request, hasher);
                 }
             }
 
@@ -348,7 +358,7 @@ namespace WebSub.AspNet.WebHooks.Receivers.Subscriber.WebHooks
             {
                 using (HMACSHA384 hasher = new HMACSHA384(secret))
                 {
-                    return ComputeRequestBodyHmacHashAsync(request, hasher);
+                    return await ComputeRequestBodyHmacHashAsync(request, hasher);
                 }
             }
 
@@ -356,7 +366,7 @@ namespace WebSub.AspNet.WebHooks.Receivers.Subscriber.WebHooks
             {
                 using (HMACSHA512 hasher = new HMACSHA512(secret))
                 {
-                    return ComputeRequestBodyHmacHashAsync(request, hasher);
+                    return await ComputeRequestBodyHmacHashAsync(request, hasher);
                 }
             }
 

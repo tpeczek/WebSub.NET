@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Xunit;
+using Moq;
 using WebSub.WebHooks.Receivers.Subscriber.Services;
 using WebSub.AspNet.WebHooks.Receivers.Subscriber.WebHooks;
 using Test.WebSub.AspNet.WebHooks.Receivers.Subscriber.WebHooks.Infrastructure;
@@ -36,6 +37,17 @@ namespace Test.WebSub.AspNet.WebHooks.Receivers.Subscriber.WebHooks
         private const string OTHER_WEBSUB_ROCKS_TOPIC_URL = "https://websub.rocks/blog/101/";
         private const string WEBSUB_ROCKS_CHALLENGE = "LNecT715EcOqAdVDWbVH";
         private const string WEBSUB_ROCKS_LEASE_SECONDS = "86400";
+
+        private const string SECRET = "0123456789012345";
+        private const string CONTENT = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+        private const string CONTENT_VALID_HMACSHA1 = "751fe4094ee7179246b218c044ef4cad22f5f15e";
+        private const string CONTENT_INVALID_HMACSHA1 = "751fe4094ee7179246b218c044ef4cad22f5f15f";
+        private const string CONTENT_VALID_HMACSHA256 = "4cff476bb1ca6e03f5368afde541ff206877eb5651e7e86581a27bb1eeb17d19";
+        private const string CONTENT_INVALID_HMACSHA256 = "4cff476bb1ca6e03f5368afde541ff206877eb5651e7e86581a27bb1eeb17d1a";
+        private const string CONTENT_VALID_HMACSHA384 = "f5d55d2b0234153e5a1775004e6c0610f695217aea619e02204dfa7e86b9bf4d633f8800bb65cdd743f64e9ce8c0bb72";
+        private const string CONTENT_INVALID_HMACSHA384 = "f5d55d2b0234153e5a1775004e6c0610f695217aea619e02204dfa7e86b9bf4d633f8800bb65cdd743f64e9ce8c0bb73";
+        private const string CONTENT_VALID_HMACSHA512 = "4a0e95a159a83675989f1433c98fc2de4fb9db534450f2db2bc02493632f82e2597cc6cf6be833efeefe15a2f8ca253d9e4726fdddca02278a79c8ded4c5f471";
+        private const string CONTENT_INVALID_HMACSHA512 = "4a0e95a159a83675989f1433c98fc2de4fb9db534450f2db2bc02493632f82e2597cc6cf6be833efeefe15a2f8ca253d9e4726fdddca02278a79c8ded4c5f472";
         #endregion
 
         #region Prepare SUT
@@ -62,9 +74,9 @@ namespace Test.WebSub.AspNet.WebHooks.Receivers.Subscriber.WebHooks
             };
         }
 
-        private HttpRequestMessage PrepareWebSubRequestMessage(string method, string id, HttpRequestContext context)
+        private HttpRequestMessage PrepareWebSubRequestMessage(string method, string id, HttpRequestContext context, string requestUri = null)
         {
-            HttpRequestMessage webSubRequestMessage = new HttpRequestMessage(new HttpMethod(method), WEBHOOK_BASE_URI + id);
+            HttpRequestMessage webSubRequestMessage = new HttpRequestMessage(new HttpMethod(method), requestUri ?? (WEBHOOK_BASE_URI + id));
 
             webSubRequestMessage.SetRequestContext(context);
 
@@ -112,11 +124,20 @@ namespace Test.WebSub.AspNet.WebHooks.Receivers.Subscriber.WebHooks
                 requestUri = requestUri + "?" + queryBuilder.ToString();
             }
 
-            HttpRequestMessage intentVerificatioRequestMessage = new HttpRequestMessage(HttpMethod.Get, requestUri);
+            return PrepareWebSubRequestMessage("GET", id, context, requestUri);
+        }
 
-            intentVerificatioRequestMessage.SetRequestContext(context);
+        private HttpRequestMessage PrepareContentDistributionRequestMessage(string id, HttpRequestContext context,
+            string content = null,
+            string algorithm = null,
+            string hash = null)
+        {
+            HttpRequestMessage contentDistributionRequestMessage = PrepareWebSubRequestMessage("POST", id, context);
 
-            return intentVerificatioRequestMessage;
+            contentDistributionRequestMessage.Content = new StringContent(content ?? String.Empty, Encoding.UTF8);
+            contentDistributionRequestMessage.Headers.Add("X-Hub-Signature", $"{algorithm}={hash}");
+
+            return contentDistributionRequestMessage;
         }
         #endregion
 
@@ -274,6 +295,83 @@ namespace Test.WebSub.AspNet.WebHooks.Receivers.Subscriber.WebHooks
             HttpResponseMessage receiveAsyncResult = await webSubWebHookReceiver.ReceiveAsync(WEBHOOK_ID, context, request);
 
             Assert.Equal(HttpStatusCode.NotFound, receiveAsyncResult.StatusCode);
+        }
+
+        [Theory]
+        [InlineData(WebSubSubscriptionState.Created)]
+        [InlineData(WebSubSubscriptionState.SubscribeDenied)]
+        [InlineData(WebSubSubscriptionState.SubscribeRequested)]
+        [InlineData(WebSubSubscriptionState.UnsubscribeRequested)]
+        [InlineData(WebSubSubscriptionState.UnsubscribeValidated)]
+        public async Task OnReceiveAsync_ContentDistributionRequestForSubscriptionStateDifferentThanSubscribeValidated_ReturnsNotFoundResponse(WebSubSubscriptionState webSubSubscriptionState)
+        {
+            HttpRequestContext context = PrepareWebSubRequestContext(PrepareWebSubDependencyResolver(WEBHOOK_ID, subscriptionState: webSubSubscriptionState));
+            HttpRequestMessage request = PrepareContentDistributionRequestMessage(WEBHOOK_ID, context);
+            WebSubWebHookReceiver webSubWebHookReceiver = new WebSubWebHookReceiver();
+
+            HttpResponseMessage receiveAsyncResult = await webSubWebHookReceiver.ReceiveAsync(WEBHOOK_ID, context, request);
+
+            Assert.Equal(HttpStatusCode.NotFound, receiveAsyncResult.StatusCode);
+        }
+
+        [Fact]
+        public async Task OnReceiveAsync_ContentDistributionRequestForValidatedSubscriptionWithSecret_ReturnsBadRequestResponse()
+        {
+            HttpRequestContext context = PrepareWebSubRequestContext(PrepareWebSubDependencyResolver(WEBHOOK_ID, subscriptionState: WebSubSubscriptionState.SubscribeValidated, secret: SECRET));
+            HttpRequestMessage request = PrepareContentDistributionRequestMessage(WEBHOOK_ID, context);
+            WebSubWebHookReceiver webSubWebHookReceiver = new WebSubWebHookReceiver();
+
+            HttpResponseMessage receiveAsyncResult = await webSubWebHookReceiver.ReceiveAsync(WEBHOOK_ID, context, request);
+
+            Assert.Equal(HttpStatusCode.BadRequest, receiveAsyncResult.StatusCode);
+        }
+
+        [Fact]
+        public async Task OnReceiveAsync_ContentDistributionRequestForValidatedSubscriptionWithoutSecret_CallsExecuteWebHookAsync()
+        {
+            HttpRequestContext context = PrepareWebSubRequestContext(PrepareWebSubDependencyResolver(WEBHOOK_ID, subscriptionState: WebSubSubscriptionState.SubscribeValidated, secret: null));
+            HttpRequestMessage request = PrepareContentDistributionRequestMessage(WEBHOOK_ID, context);
+
+            var executeWebHookAsyncFuncMock = new Mock<Func<string, HttpRequestContext, HttpRequestMessage, IEnumerable<string>, object, Task<HttpResponseMessage>>>();
+            WebSubWebHookReceiver webSubWebHookReceiver = new VerifiableWebSubWebHookReceiver(executeWebHookAsyncFuncMock.Object);
+
+            HttpResponseMessage receiveAsyncResult = await webSubWebHookReceiver.ReceiveAsync(WEBHOOK_ID, context, request);
+
+            executeWebHookAsyncFuncMock.Verify(m => m(It.IsAny<string>(), It.IsAny<HttpRequestContext>(), It.IsAny<HttpRequestMessage>(), It.IsAny<IEnumerable<string>>(), It.IsAny<object>()), Times.Once);
+        }
+
+        [Theory]
+        [InlineData("sha1", CONTENT_INVALID_HMACSHA1)]
+        [InlineData("sha256", CONTENT_INVALID_HMACSHA256)]
+        [InlineData("sha384", CONTENT_INVALID_HMACSHA384)]
+        [InlineData("sha512", CONTENT_INVALID_HMACSHA512)]
+        public async Task OnReceiveAsync_AuthenticatedContentDistributionRequestWithInvalidHashForValidatedSubscriptionWithSecret_ReturnsBadRequestResponse(string algorithm, string hash)
+        {
+            HttpRequestContext context = PrepareWebSubRequestContext(PrepareWebSubDependencyResolver(WEBHOOK_ID, subscriptionState: WebSubSubscriptionState.SubscribeValidated, secret: SECRET));
+            HttpRequestMessage request = PrepareContentDistributionRequestMessage(WEBHOOK_ID, context, content: CONTENT, algorithm: algorithm, hash: hash);
+            WebSubWebHookReceiver webSubWebHookReceiver = new WebSubWebHookReceiver();
+
+            HttpResponseMessage receiveAsyncResult = await webSubWebHookReceiver.ReceiveAsync(WEBHOOK_ID, context, request);
+
+            Assert.Equal(HttpStatusCode.BadRequest, receiveAsyncResult.StatusCode);
+        }
+
+        [Theory]
+        [InlineData("sha1", CONTENT_VALID_HMACSHA1)]
+        [InlineData("sha256", CONTENT_VALID_HMACSHA256)]
+        [InlineData("sha384", CONTENT_VALID_HMACSHA384)]
+        [InlineData("sha512", CONTENT_VALID_HMACSHA512)]
+        public async Task OnReceiveAsync_AuthenticatedContentDistributionRequestWithValidHashForValidatedSubscriptionWithSecret_CallsExecuteWebHookAsync(string algorithm, string hash)
+        {
+            HttpRequestContext context = PrepareWebSubRequestContext(PrepareWebSubDependencyResolver(WEBHOOK_ID, subscriptionState: WebSubSubscriptionState.SubscribeValidated, secret: null));
+            HttpRequestMessage request = PrepareContentDistributionRequestMessage(WEBHOOK_ID, context, content: CONTENT, algorithm: algorithm, hash: hash);
+
+            var executeWebHookAsyncFuncMock = new Mock<Func<string, HttpRequestContext, HttpRequestMessage, IEnumerable<string>, object, Task<HttpResponseMessage>>>();
+            WebSubWebHookReceiver webSubWebHookReceiver = new VerifiableWebSubWebHookReceiver(executeWebHookAsyncFuncMock.Object);
+
+            HttpResponseMessage receiveAsyncResult = await webSubWebHookReceiver.ReceiveAsync(WEBHOOK_ID, context, request);
+
+            executeWebHookAsyncFuncMock.Verify(m => m(It.IsAny<string>(), It.IsAny<HttpRequestContext>(), It.IsAny<HttpRequestMessage>(), It.IsAny<IEnumerable<string>>(), It.IsAny<object>()), Times.Once);
         }
         #endregion
     }

@@ -123,7 +123,7 @@ namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
         [Theory]
         [InlineData("GET")]
         [InlineData("POST")]
-        public async void OnResourceExecutionAsync_WebSubRequestWithoutId_SetsNotFoundResult(string httpMethod)
+        public async Task OnResourceExecutionAsync_WebSubRequestWithoutId_SetsNotFoundResult(string httpMethod)
         {
             ResourceExecutingContext resourceExecutingContext = PrepareWebSubExecutingContext(httpMethod, id: null);
             ResourceExecutionDelegate resourceExecutionDelegate = () => Task.FromResult<ResourceExecutedContext>(null);
@@ -138,7 +138,7 @@ namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
         [Theory]
         [InlineData("GET")]
         [InlineData("POST")]
-        public async void OnResourceExecutionAsync_WebSubRequestWithoutMatchingId_SetsNotFoundResult(string httpMethod)
+        public async Task OnResourceExecutionAsync_WebSubRequestWithoutMatchingId_SetsNotFoundResult(string httpMethod)
         {
             ResourceExecutingContext resourceExecutingContext = PrepareWebSubExecutingContext(httpMethod, id: OTHER_WEBHOOK_ID);
             ResourceExecutionDelegate resourceExecutionDelegate = () => Task.FromResult<ResourceExecutedContext>(null);
@@ -151,7 +151,7 @@ namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
         }
 
         [Fact]
-        public async void OnResourceExecutionAsync_IntentVerificationRequest_SetsSubscriptionHttpContextItem()
+        public async Task OnResourceExecutionAsync_IntentVerificationRequest_SetsSubscriptionHttpContextItem()
         {
             ResourceExecutingContext resourceExecutingContext = PrepareWebSubExecutingContext(HttpMethods.Get);
             ResourceExecutionDelegate resourceExecutionDelegate = () => Task.FromResult<ResourceExecutedContext>(null);
@@ -164,7 +164,7 @@ namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
         }
 
         [Fact]
-        public async void OnResourceExecutionAsync_IntentVerificationRequest_CallsNext()
+        public async Task OnResourceExecutionAsync_IntentVerificationRequest_CallsNext()
         {
             ResourceExecutingContext resourceExecutingContext = PrepareWebSubExecutingContext(HttpMethods.Get);
             Mock<ResourceExecutionDelegate> resourceExecutionDelegateMock = new Mock<ResourceExecutionDelegate>();
@@ -182,7 +182,7 @@ namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
         [InlineData(WebSubSubscriptionState.SubscribeRequested)]
         [InlineData(WebSubSubscriptionState.UnsubscribeRequested)]
         [InlineData(WebSubSubscriptionState.UnsubscribeValidated)]
-        public async void OnResourceExecutionAsync_ContentDistributionRequestForSubscriptionStateDifferentThanSubscribeValidated_SetsNotFoundResult(WebSubSubscriptionState webSubSubscriptionState)
+        public async Task OnResourceExecutionAsync_ContentDistributionRequestForSubscriptionStateDifferentThanSubscribeValidated_SetsNotFoundResult(WebSubSubscriptionState webSubSubscriptionState)
         {
             ResourceExecutingContext resourceExecutingContext = PrepareContentDistributionExecutingContext(requestServices: PrepareWebSubRequestServices(subscriptionState: webSubSubscriptionState));
             ResourceExecutionDelegate resourceExecutionDelegate = () => Task.FromResult<ResourceExecutedContext>(null);
@@ -195,7 +195,7 @@ namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
         }
 
         [Fact]
-        public async void OnResourceExecutionAsync_ContentDistributionRequestForValidatedSubscriptionWithSecret_SetsBadRequestResult()
+        public async Task OnResourceExecutionAsync_ContentDistributionRequestForValidatedSubscriptionWithSecret_SetsBadRequestResult()
         {
             ResourceExecutingContext resourceExecutingContext = PrepareContentDistributionExecutingContext(requestServices: PrepareWebSubRequestServicesWithSecret());
             ResourceExecutionDelegate resourceExecutionDelegate = () => Task.FromResult<ResourceExecutedContext>(null);
@@ -208,7 +208,7 @@ namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
         }
 
         [Fact]
-        public async void OnResourceExecutionAsync_ContentDistributionRequestForValidatedSubscriptionWithoutSecret_SetsSubscriptionHttpContextItem()
+        public async Task OnResourceExecutionAsync_ContentDistributionRequestForValidatedSubscriptionWithoutSecret_SetsSubscriptionHttpContextItem()
         {
             ResourceExecutingContext resourceExecutingContext = PrepareContentDistributionExecutingContext();
             ResourceExecutionDelegate resourceExecutionDelegate = () => Task.FromResult<ResourceExecutedContext>(null);
@@ -221,7 +221,7 @@ namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
         }
 
         [Fact]
-        public async void OnResourceExecutionAsync_ContentDistributionRequestForValidatedSubscriptionWithoutSecret_CallsNext()
+        public async Task OnResourceExecutionAsync_ContentDistributionRequestForValidatedSubscriptionWithoutSecret_CallsNext()
         {
             ResourceExecutingContext resourceExecutingContext = PrepareContentDistributionExecutingContext();
             Mock<ResourceExecutionDelegate> resourceExecutionDelegateMock = new Mock<ResourceExecutionDelegate>();
@@ -238,7 +238,7 @@ namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
         [InlineData("sha256", CONTENT_INVALID_HMACSHA256)]
         [InlineData("sha384", CONTENT_INVALID_HMACSHA384)]
         [InlineData("sha512", CONTENT_INVALID_HMACSHA512)]
-        public async void OnResourceExecutionAsync_AuthenticatedContentDistributionRequestWithInvalidHashForValidatedSubscriptionWithSecret_SetsBadRequestResult(string algorithm, string hash)
+        public async Task OnResourceExecutionAsync_AuthenticatedContentDistributionRequestWithInvalidHashForValidatedSubscriptionWithSecret_SetsBadRequestResult(string algorithm, string hash)
         {
             ResourceExecutingContext resourceExecutingContext = PrepareAuthenticatedContentDistributionExecutingContext(algorithm, hash);
             ResourceExecutionDelegate resourceExecutionDelegate = () => Task.FromResult<ResourceExecutedContext>(null);
@@ -255,7 +255,7 @@ namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
         [InlineData("sha256", CONTENT_VALID_HMACSHA256)]
         [InlineData("sha384", CONTENT_VALID_HMACSHA384)]
         [InlineData("sha512", CONTENT_VALID_HMACSHA512)]
-        public async void OnResourceExecutionAsync_AuthenticatedContentDistributionRequestWithValidHashForValidatedSubscriptionWithSecret_SetsSubscriptionHttpContextItem(string algorithm, string hash)
+        public async Task OnResourceExecutionAsync_AuthenticatedContentDistributionRequestWithValidHashForValidatedSubscriptionWithSecret_SetsSubscriptionHttpContextItem(string algorithm, string hash)
         {
             ResourceExecutingContext resourceExecutingContext = PrepareAuthenticatedContentDistributionExecutingContext(algorithm, hash);
             ResourceExecutionDelegate resourceExecutionDelegate = () => Task.FromResult<ResourceExecutedContext>(null);
@@ -272,7 +272,7 @@ namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
         [InlineData("sha256", CONTENT_VALID_HMACSHA256)]
         [InlineData("sha384", CONTENT_VALID_HMACSHA384)]
         [InlineData("sha512", CONTENT_VALID_HMACSHA512)]
-        public async void OnResourceExecutionAsync_AuthenticatedContentDistributionRequestWithValidHashForValidatedSubscriptionWithSecret_CallsNext(string algorithm, string hash)
+        public async Task OnResourceExecutionAsync_AuthenticatedContentDistributionRequestWithValidHashForValidatedSubscriptionWithSecret_CallsNext(string algorithm, string hash)
         {
             ResourceExecutingContext resourceExecutingContext = PrepareAuthenticatedContentDistributionExecutingContext(algorithm, hash);
             Mock<ResourceExecutionDelegate> resourceExecutionDelegateMock = new Mock<ResourceExecutionDelegate>();
