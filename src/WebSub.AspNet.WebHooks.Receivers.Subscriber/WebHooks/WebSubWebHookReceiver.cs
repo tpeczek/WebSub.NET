@@ -9,8 +9,9 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using Microsoft.AspNet.WebHooks;
-using WebSub.AspNet.WebHooks.Receivers.Subscriber.Extensions;
+using WebSub.WebHooks.Receivers.Subscriber;
 using WebSub.WebHooks.Receivers.Subscriber.Services;
+using WebSub.AspNet.WebHooks.Receivers.Subscriber.Extensions;
 
 namespace WebSub.AspNet.WebHooks.Receivers.Subscriber.WebHooks
 {
@@ -96,7 +97,7 @@ namespace WebSub.AspNet.WebHooks.Receivers.Subscriber.WebHooks
                         return contentDistributionVerificationResponse;
                     }
 
-                    return await ExecuteWebHookAsync(id, context, request, Enumerable.Empty<string>(), null);
+                    return await ExecuteWebHookAsync(id, context, request, Enumerable.Empty<string>(), new WebSubContent(request));
                 }
                 else
                 {

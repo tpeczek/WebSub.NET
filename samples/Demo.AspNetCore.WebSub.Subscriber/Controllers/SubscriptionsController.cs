@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebSub.Net.Http.Subscriber;
 using WebSub.Net.Http.Subscriber.Discovery;
+using WebSub.WebHooks.Receivers.Subscriber;
 using WebSub.WebHooks.Receivers.Subscriber.Services;
 using Demo.AspNetCore.WebSub.Subscriber.Model;
 

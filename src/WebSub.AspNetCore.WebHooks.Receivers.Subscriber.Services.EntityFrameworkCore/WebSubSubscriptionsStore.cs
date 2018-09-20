@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using WebSub.WebHooks.Receivers.Subscriber.Services;
+using WebSub.WebHooks.Receivers.Subscriber;
 
 namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.EntityFrameworkCore
 {

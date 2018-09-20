@@ -138,9 +138,9 @@
       <Project>{251ab8b3-4ecc-424c-b8d7-8348ac3a5f41}</Project>
       <Name>WebSub.AspNet.WebHooks.Receivers.Subscriber</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\WebSub.WebHooks.Receivers.Subscriber.Services.Abstractions\WebSub.WebHooks.Receivers.Subscriber.Services.Abstractions.csproj">
+    <ProjectReference Include="..\..\src\WebSub.WebHooks.Receivers.Subscriber.Abstractions\WebSub.WebHooks.Receivers.Subscriber.Abstractions.csproj">
       <Project>{3f094f95-c6ed-4562-b976-6b5fbb568295}</Project>
-      <Name>WebSub.WebHooks.Receivers.Subscriber.Services.Abstractions</Name>
+      <Name>WebSub.WebHooks.Receivers.Subscriber.Abstractions</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

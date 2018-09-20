@@ -1,5 +1,5 @@
 ﻿using System;
-using WebSub.WebHooks.Receivers.Subscriber.Services;
+using WebSub.WebHooks.Receivers.Subscriber;
 
 namespace Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters.Infrastructure
 {

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Xunit;
-using WebSub.WebHooks.Receivers.Subscriber.Services;
+using WebSub.WebHooks.Receivers.Subscriber;
 using WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters;
 using Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters.Infrastructure;
 

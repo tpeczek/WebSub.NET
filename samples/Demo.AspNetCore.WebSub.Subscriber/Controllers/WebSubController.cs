@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Lib.AspNetCore.ServerSentEvents;
-using WebSub.WebHooks.Receivers.Subscriber.Services;
+using WebSub.WebHooks.Receivers.Subscriber;
 using WebSub.AspNetCore.WebHooks.Receivers.Subscriber;
 
 namespace Demo.AspNetCore.WebSub.Subscriber.Controllers

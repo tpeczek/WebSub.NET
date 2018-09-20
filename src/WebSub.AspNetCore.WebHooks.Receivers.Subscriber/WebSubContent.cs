@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using WebSub.WebHooks.Receivers.Subscriber;
 
 namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber
 {
@@ -29,7 +31,18 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber
         /// <summary>
         /// Gets the Content-Type.
         /// </summary>
-        public string ContentType => _request.ContentType;
+        public string ContentType
+        {
+            get
+            {
+                if (!IsRequestValidPost())
+                {
+                    return null;
+                }
+
+                return _request.ContentType;
+            }
+        }
         #endregion
 
         #region Constructor
@@ -80,10 +93,19 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber
         }
 
         /// <summary>
+        /// Reads content as a form (key/value pairs).
+        /// </summary>
+        /// <returns>Content as form (key/value pairs).</returns>
+        public async Task<IEnumerable<KeyValuePair<string, string>>> ReadAsFormAsync()
+        {
+            return (IEnumerable<KeyValuePair<string, string>>)(await ReadAsFormCollectionAsync());
+        }
+
+        /// <summary>
         /// Reads content as an <see cref="IFormCollection"/> instance.
         /// </summary>
         /// <returns>Content as an <see cref="IFormCollection"/> instance.</returns>
-        public Task<IFormCollection> ReadAsFormDataAsync()
+        public Task<IFormCollection> ReadAsFormCollectionAsync()
         {
             if (!IsRequestValidPost() || !_request.HasFormContentType)
             {
@@ -125,7 +147,7 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber
 
         private bool IsRequestValidPost()
         {
-            return (_request.Body != null) && (_request.ContentLength.HasValue) && (_request.ContentLength.Value > 0L) && HttpMethods.IsPost(_request.Method);
+            return HttpMethods.IsPost(_request.Method) && (_request.Body != null) && (_request.ContentLength.HasValue) && (_request.ContentLength.Value > 0L);
         }
         #endregion
     }

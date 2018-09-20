@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.WebHooks.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
+using WebSub.WebHooks.Receivers.Subscriber;
 using WebSub.WebHooks.Receivers.Subscriber.Services;
-using WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services;
 
 namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Filters
 {

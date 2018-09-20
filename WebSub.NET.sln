@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSub.AspNet.WebHooks.Rece
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.WebSub.AspNet.WebHooks.Receivers.Subscriber", "test\Test.WebSub.AspNet.WebHooks.Receivers.Subscriber\Test.WebSub.AspNet.WebHooks.Receivers.Subscriber.csproj", "{8EF2CA48-44B4-4D01-BDFB-63305C90F28B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSub.WebHooks.Receivers.Subscriber.Services.Abstractions", "src\WebSub.WebHooks.Receivers.Subscriber.Services.Abstractions\WebSub.WebHooks.Receivers.Subscriber.Services.Abstractions.csproj", "{3F094F95-C6ED-4562-B976-6B5FBB568295}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSub.WebHooks.Receivers.Subscriber.Abstractions", "src\WebSub.WebHooks.Receivers.Subscriber.Abstractions\WebSub.WebHooks.Receivers.Subscriber.Abstractions.csproj", "{3F094F95-C6ED-4562-B976-6B5FBB568295}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,8 +1,8 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 
-namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber
+namespace WebSub.WebHooks.Receivers.Subscriber
 {
     /// <summary>
     /// An interface representing delivered content.
@@ -27,10 +27,10 @@ namespace WebSub.AspNetCore.WebHooks.Receivers.Subscriber
         Task<string> ReadAsStringAsync(Encoding encoding = null);
 
         /// <summary>
-        /// Reads content as an <see cref="IFormCollection"/> instance.
+        /// Reads content as a form (key/value pairs).
         /// </summary>
-        /// <returns>Content as an <see cref="IFormCollection"/> instance.</returns>
-        Task<IFormCollection> ReadAsFormDataAsync();
+        /// <returns>Content as form (key/value pairs).</returns>
+        Task<IEnumerable<KeyValuePair<string, string>>> ReadAsFormAsync();
 
         /// <summary>
         /// Reads content as a <typeparamref name="TModel"/> instance.

@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using WebSub.WebHooks.Receivers.Subscriber.Services;
+using WebSub.WebHooks.Receivers.Subscriber;
 using WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services;
 
 namespace Demo.AspNetCore.WebSub.Subscriber.Services

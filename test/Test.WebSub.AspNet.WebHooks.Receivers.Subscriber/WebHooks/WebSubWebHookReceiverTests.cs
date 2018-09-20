@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Xunit;
 using Moq;
-using WebSub.WebHooks.Receivers.Subscriber.Services;
+using WebSub.WebHooks.Receivers.Subscriber;
 using WebSub.AspNet.WebHooks.Receivers.Subscriber.WebHooks;
 using Test.WebSub.AspNet.WebHooks.Receivers.Subscriber.WebHooks.Infrastructure;
 

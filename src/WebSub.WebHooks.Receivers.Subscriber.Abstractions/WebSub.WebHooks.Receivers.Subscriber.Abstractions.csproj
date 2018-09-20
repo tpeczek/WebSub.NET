@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Description>WebSub subscriber receiver WebHooks services abstractions.</Description>
+    <Description>WebSub subscriber receiver WebHooks abstractions.</Description>
     <Copyright>Copyright © 2018 Tomasz Pęczek</Copyright>
     <VersionPrefix>1.0.0-preview1</VersionPrefix>
     <Authors>Tomasz Pęczek</Authors>
     <TargetFrameworks>netstandard1.0;netstandard2.0</TargetFrameworks>
-    <AssemblyTitle>WebSub.WebHooks.Receivers.Subscriber.Services.Abstractions</AssemblyTitle>
-    <AssemblyName>WebSub.WebHooks.Receivers.Subscriber.Services.Abstractions</AssemblyName>
-    <PackageId>WebSub.WebHooks.Receivers.Subscriber.Services.Abstractions</PackageId>
+    <AssemblyTitle>WebSub.WebHooks.Receivers.Subscriber.Abstractions</AssemblyTitle>
+    <AssemblyName>WebSub.WebHooks.Receivers.Subscriber.Abstractions</AssemblyName>
+    <PackageId>WebSub.WebHooks.Receivers.Subscriber.Abstractions</PackageId>
     <PackageTags></PackageTags>
     <PackageProjectUrl>https://github.com/tpeczek/WebSub.NET</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/tpeczek/WebSub.NET/blob/master/LICENSE.md</PackageLicenseUrl>

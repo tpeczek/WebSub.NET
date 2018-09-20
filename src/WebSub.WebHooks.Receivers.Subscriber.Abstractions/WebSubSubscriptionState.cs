@@ -1,4 +1,4 @@
-﻿namespace WebSub.WebHooks.Receivers.Subscriber.Services
+﻿namespace WebSub.WebHooks.Receivers.Subscriber
 {
     /// <summary>
     /// The <see cref="WebSubSubscription"/> states.

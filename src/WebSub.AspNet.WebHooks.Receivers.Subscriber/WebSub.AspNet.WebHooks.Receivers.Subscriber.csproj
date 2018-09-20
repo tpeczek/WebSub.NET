@@ -28,6 +28,6 @@
     <!--<PackageReference Include="WebSub.WebHooks.Receivers.Subscriber.Services.Abstractions" Version="1.0.0-preview1" />-->
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WebSub.WebHooks.Receivers.Subscriber.Services.Abstractions\WebSub.WebHooks.Receivers.Subscriber.Services.Abstractions.csproj" />
+    <ProjectReference Include="..\WebSub.WebHooks.Receivers.Subscriber.Abstractions\WebSub.WebHooks.Receivers.Subscriber.Abstractions.csproj" />
   </ItemGroup>
 </Project>

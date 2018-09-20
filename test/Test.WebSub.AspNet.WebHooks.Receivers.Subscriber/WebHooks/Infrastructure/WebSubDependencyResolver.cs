@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Web.Http.Dependencies;
+using WebSub.WebHooks.Receivers.Subscriber;
 using WebSub.WebHooks.Receivers.Subscriber.Services;
 
 namespace Test.WebSub.AspNet.WebHooks.Receivers.Subscriber.WebHooks.Infrastructure

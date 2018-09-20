@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using WebSub.WebHooks.Receivers.Subscriber.Services;
+using WebSub.WebHooks.Receivers.Subscriber;
 
 namespace Demo.AspNetCore.WebSub.Subscriber.Model
 {

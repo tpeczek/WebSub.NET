@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WebSub.WebHooks.Receivers.Subscriber.Services
+namespace WebSub.WebHooks.Receivers.Subscriber
 {
     /// <summary>
     /// Represents a WebSub subscription.
