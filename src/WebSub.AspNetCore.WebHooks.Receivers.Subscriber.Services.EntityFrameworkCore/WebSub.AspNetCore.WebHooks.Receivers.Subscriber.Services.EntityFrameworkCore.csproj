@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>ASP.NET Core WebSub subscriber receiver WebHooks services implementation that uses Entity Framework Core.</Description>
+    <Tags>aspnetcore entityframeworkcore webhook receiver websub subscriber</Tags>
     <Copyright>Copyright © 2018 Tomasz Pęczek</Copyright>
-    <VersionPrefix>1.0.0-preview1</VersionPrefix>
+    <VersionPrefix>1.0.0-preview2</VersionPrefix>
     <Authors>Tomasz Pęczek</Authors>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyTitle>WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.EntityFrameworkCore</AssemblyTitle>
@@ -24,8 +25,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.0" />
-    <!--<PackageReference Include="WebSub.WebHooks.Receivers.Subscriber.Services.Abstractions" Version="1.0.0-preview1" />-->
-    <!--<PackageReference Include="WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.Abstractions" Version="1.0.0-preview1" />-->
+    <!--<PackageReference Include="WebSub.WebHooks.Receivers.Subscriber.Abstractions" Version="1.0.0-preview2" />-->
+    <!--<PackageReference Include="WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.Abstractions" Version="1.0.0-preview2" />-->
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.Abstractions\WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.Abstractions.csproj" />

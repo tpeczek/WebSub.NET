@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>ASP.NET WebSub subscriber receiver WebHooks infrastructure. Contains the WebSubWebHookReceiver class.</Description>
+    <Tags>aspnet webhook receiver websub subscriber</Tags>
     <Copyright>Copyright © 2018 Tomasz Pęczek</Copyright>
-    <VersionPrefix>1.0.0-preview1</VersionPrefix>
+    <VersionPrefix>1.0.0-preview2</VersionPrefix>
     <Authors>Tomasz Pęczek</Authors>
     <TargetFramework>net45</TargetFramework>
     <AssemblyTitle>WebSub.AspNet.WebHooks.Receivers.Subscriber</AssemblyTitle>
@@ -25,7 +26,7 @@
     <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.2" />
     <PackageReference Include="Microsoft.AspNet.WebHooks.Common" Version="1.2.0" />
     <PackageReference Include="Microsoft.AspNet.WebHooks.Receivers" Version="1.2.0" />
-    <!--<PackageReference Include="WebSub.WebHooks.Receivers.Subscriber.Services.Abstractions" Version="1.0.0-preview1" />-->
+    <!--<PackageReference Include="WebSub.WebHooks.Receivers.Subscriber.Abstractions" Version="1.0.0-preview2" />-->
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WebSub.WebHooks.Receivers.Subscriber.Abstractions\WebSub.WebHooks.Receivers.Subscriber.Abstractions.csproj" />

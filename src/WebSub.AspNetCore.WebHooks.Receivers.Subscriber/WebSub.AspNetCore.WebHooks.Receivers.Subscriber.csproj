@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>ASP.NET Core WebSub subscriber receiver WebHooks infrastructure. Contains the WebSubWebHookAttribute class and AddWebSubWebHooks method.</Description>
+    <Tags>aspnetcore webhook receiver websub subscriber</Tags>
     <Copyright>Copyright © 2018 Tomasz Pęczek</Copyright>
-    <VersionPrefix>1.0.0-preview1</VersionPrefix>
+    <VersionPrefix>1.0.0-preview2</VersionPrefix>
     <Authors>Tomasz Pęczek</Authors>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyTitle>WebSub.AspNetCore.WebHooks.Receivers.Subscriber</AssemblyTitle>
@@ -25,8 +26,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Xml" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.WebHooks.Receivers" Version="1.0.0-preview3-final" />
-    <!--<PackageReference Include="WebSub.WebHooks.Receivers.Subscriber.Services.Abstractions" Version="1.0.0-preview1" />-->
-    <!--<PackageReference Include="WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.Abstractions" Version="1.0.0-preview1" />-->
+    <!--<PackageReference Include="WebSub.WebHooks.Receivers.Subscriber.Abstractions" Version="1.0.0-preview2" />-->
+    <!--<PackageReference Include="WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.Abstractions" Version="1.0.0-preview2" />-->
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.Abstractions\WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.Abstractions.csproj" />
