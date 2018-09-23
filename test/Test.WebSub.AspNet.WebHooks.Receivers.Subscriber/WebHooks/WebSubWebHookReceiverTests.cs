@@ -340,6 +340,20 @@ namespace Test.WebSub.AspNet.WebHooks.Receivers.Subscriber.WebHooks
             executeWebHookAsyncFuncMock.Verify(m => m(It.IsAny<string>(), It.IsAny<HttpRequestContext>(), It.IsAny<HttpRequestMessage>(), It.IsAny<IEnumerable<string>>(), It.IsAny<object>()), Times.Once);
         }
 
+        [Fact]
+        public async Task OnReceiveAsync_ContentDistributionRequestForValidatedSubscriptionWithoutSecret_DataIsWebSubContent()
+        {
+            HttpRequestContext context = PrepareWebSubRequestContext(PrepareWebSubDependencyResolver(WEBHOOK_ID, subscriptionState: WebSubSubscriptionState.SubscribeValidated, secret: null));
+            HttpRequestMessage request = PrepareContentDistributionRequestMessage(WEBHOOK_ID, context);
+
+            var executeWebHookAsyncFuncMock = new Mock<Func<string, HttpRequestContext, HttpRequestMessage, IEnumerable<string>, object, Task<HttpResponseMessage>>>();
+            WebSubWebHookReceiver webSubWebHookReceiver = new VerifiableWebSubWebHookReceiver(executeWebHookAsyncFuncMock.Object);
+
+            HttpResponseMessage receiveAsyncResult = await webSubWebHookReceiver.ReceiveAsync(WEBHOOK_ID, context, request);
+
+            executeWebHookAsyncFuncMock.Verify(m => m(It.IsAny<string>(), It.IsAny<HttpRequestContext>(), It.IsAny<HttpRequestMessage>(), It.IsAny<IEnumerable<string>>(), It.IsNotNull<IWebSubContent>()), Times.Once);
+        }
+
         [Theory]
         [InlineData("sha1", CONTENT_INVALID_HMACSHA1)]
         [InlineData("sha256", CONTENT_INVALID_HMACSHA256)]
@@ -372,6 +386,24 @@ namespace Test.WebSub.AspNet.WebHooks.Receivers.Subscriber.WebHooks
             HttpResponseMessage receiveAsyncResult = await webSubWebHookReceiver.ReceiveAsync(WEBHOOK_ID, context, request);
 
             executeWebHookAsyncFuncMock.Verify(m => m(It.IsAny<string>(), It.IsAny<HttpRequestContext>(), It.IsAny<HttpRequestMessage>(), It.IsAny<IEnumerable<string>>(), It.IsAny<object>()), Times.Once);
+        }
+
+        [Theory]
+        [InlineData("sha1", CONTENT_VALID_HMACSHA1)]
+        [InlineData("sha256", CONTENT_VALID_HMACSHA256)]
+        [InlineData("sha384", CONTENT_VALID_HMACSHA384)]
+        [InlineData("sha512", CONTENT_VALID_HMACSHA512)]
+        public async Task OnReceiveAsync_AuthenticatedContentDistributionRequestWithValidHashForValidatedSubscriptionWithSecret_DataIsWebSubContent(string algorithm, string hash)
+        {
+            HttpRequestContext context = PrepareWebSubRequestContext(PrepareWebSubDependencyResolver(WEBHOOK_ID, subscriptionState: WebSubSubscriptionState.SubscribeValidated, secret: null));
+            HttpRequestMessage request = PrepareContentDistributionRequestMessage(WEBHOOK_ID, context, content: CONTENT, algorithm: algorithm, hash: hash);
+
+            var executeWebHookAsyncFuncMock = new Mock<Func<string, HttpRequestContext, HttpRequestMessage, IEnumerable<string>, object, Task<HttpResponseMessage>>>();
+            WebSubWebHookReceiver webSubWebHookReceiver = new VerifiableWebSubWebHookReceiver(executeWebHookAsyncFuncMock.Object);
+
+            HttpResponseMessage receiveAsyncResult = await webSubWebHookReceiver.ReceiveAsync(WEBHOOK_ID, context, request);
+
+            executeWebHookAsyncFuncMock.Verify(m => m(It.IsAny<string>(), It.IsAny<HttpRequestContext>(), It.IsAny<HttpRequestMessage>(), It.IsAny<IEnumerable<string>>(), It.IsNotNull<IWebSubContent>()), Times.Once);
         }
         #endregion
     }
