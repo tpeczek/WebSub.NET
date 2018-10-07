@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using WebSub.WebHooks.Receivers.Subscriber.Services;
+using WebSub.WebHooks.Receivers.Subscriber.Services.EntityFrameworkCore;
 
 namespace Microsoft.AspNetCore.Builder
 {
@@ -15,7 +17,7 @@ namespace Microsoft.AspNetCore.Builder
         /// <returns>The collection of service descriptors.</returns>
         public static IServiceCollection AddEntityFrameworkWebSubSubscriptionStore<TContext>(this IServiceCollection services) where TContext : WebSubDbContext
         {
-            services.AddWebSubSubscriptionStore<WebSubSubscriptionsStore<TContext>>();
+            services.TryAddScoped<IWebSubSubscriptionsStore, WebSubSubscriptionsStore<TContext>>();
 
             return services;
         }

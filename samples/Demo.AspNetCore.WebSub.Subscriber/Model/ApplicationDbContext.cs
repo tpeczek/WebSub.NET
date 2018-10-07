@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.EntityFrameworkCore;
+using WebSub.WebHooks.Receivers.Subscriber.Services.EntityFrameworkCore;
 
 namespace Demo.AspNetCore.WebSub.Subscriber.Model
 {

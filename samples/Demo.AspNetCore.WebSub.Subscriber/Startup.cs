@@ -35,7 +35,7 @@ namespace Demo.AspNetCore.WebSub.Subscriber
             );
             services.AddEntityFrameworkWebSubSubscriptionStore<ApplicationDbContext>();
 
-            //services.AddWebSubSubscriptionStore<MemoryWebSubSubscriptionsStore>();
+            //services.AddSingleton<IWebSubSubscriptionsStore, MemoryWebSubSubscriptionsStore>();
 
             services.AddSingleton<IWebSubSubscriptionsService, ServerSentEventWebSubSubscriptionsService>();
 

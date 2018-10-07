@@ -17,8 +17,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{3F3D32A7-4
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.WebSub.Net.Http.Subscriber", "test\Test.WebSub.Net.Http.Subscriber\Test.WebSub.Net.Http.Subscriber.csproj", "{EFC944C4-6195-43D2-89B3-F24AAFBF403D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.Abstractions", "src\WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.Abstractions\WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.Abstractions.csproj", "{AF4B4EC1-BD2D-4E5A-93DD-44C889699872}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber", "test\Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber\Test.WebSub.AspNetCore.WebHooks.Receivers.Subscriber.csproj", "{EB76A23D-391A-4763-B762-45014F4A5C26}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.EntityFrameworkCore", "src\WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.EntityFrameworkCore\WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.EntityFrameworkCore.csproj", "{58A2F3FB-DE63-49E8-8422-D8BF983DB04B}"
@@ -30,6 +28,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.WebSub.AspNet.WebHooks.Receivers.Subscriber", "test\Test.WebSub.AspNet.WebHooks.Receivers.Subscriber\Test.WebSub.AspNet.WebHooks.Receivers.Subscriber.csproj", "{8EF2CA48-44B4-4D01-BDFB-63305C90F28B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSub.WebHooks.Receivers.Subscriber.Abstractions", "src\WebSub.WebHooks.Receivers.Subscriber.Abstractions\WebSub.WebHooks.Receivers.Subscriber.Abstractions.csproj", "{3F094F95-C6ED-4562-B976-6B5FBB568295}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSub.WebHooks.Receivers.Subscriber.Services.EntityFrameworkCore", "src\WebSub.WebHooks.Receivers.Subscriber.Services.EntityFrameworkCore\WebSub.WebHooks.Receivers.Subscriber.Services.EntityFrameworkCore.csproj", "{CD67FDC3-2362-408D-8048-4B855BB9776E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,10 +53,6 @@ Global
 		{EFC944C4-6195-43D2-89B3-F24AAFBF403D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EFC944C4-6195-43D2-89B3-F24AAFBF403D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EFC944C4-6195-43D2-89B3-F24AAFBF403D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AF4B4EC1-BD2D-4E5A-93DD-44C889699872}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AF4B4EC1-BD2D-4E5A-93DD-44C889699872}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AF4B4EC1-BD2D-4E5A-93DD-44C889699872}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AF4B4EC1-BD2D-4E5A-93DD-44C889699872}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EB76A23D-391A-4763-B762-45014F4A5C26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EB76A23D-391A-4763-B762-45014F4A5C26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB76A23D-391A-4763-B762-45014F4A5C26}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -81,6 +77,10 @@ Global
 		{3F094F95-C6ED-4562-B976-6B5FBB568295}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F094F95-C6ED-4562-B976-6B5FBB568295}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F094F95-C6ED-4562-B976-6B5FBB568295}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD67FDC3-2362-408D-8048-4B855BB9776E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD67FDC3-2362-408D-8048-4B855BB9776E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD67FDC3-2362-408D-8048-4B855BB9776E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD67FDC3-2362-408D-8048-4B855BB9776E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -90,13 +90,13 @@ Global
 		{EE496B1B-00B2-48EA-ACF7-002DCCBCE16B} = {E9DE4F00-A9FE-416D-9C86-419EF0C0B9E1}
 		{6BB4E937-3FB2-4DCF-AA19-56757231A872} = {C0459CD6-0305-4671-BA3C-66A391F6D47C}
 		{EFC944C4-6195-43D2-89B3-F24AAFBF403D} = {3F3D32A7-4559-4FFC-895A-63B2B85C6909}
-		{AF4B4EC1-BD2D-4E5A-93DD-44C889699872} = {C0459CD6-0305-4671-BA3C-66A391F6D47C}
 		{EB76A23D-391A-4763-B762-45014F4A5C26} = {3F3D32A7-4559-4FFC-895A-63B2B85C6909}
 		{58A2F3FB-DE63-49E8-8422-D8BF983DB04B} = {C0459CD6-0305-4671-BA3C-66A391F6D47C}
 		{4F9C8210-0E09-4266-AB51-A03594F832E4} = {E9DE4F00-A9FE-416D-9C86-419EF0C0B9E1}
 		{7436B4A3-18B3-4EF6-847E-5B3ABDFBE7A6} = {C0459CD6-0305-4671-BA3C-66A391F6D47C}
 		{8EF2CA48-44B4-4D01-BDFB-63305C90F28B} = {3F3D32A7-4559-4FFC-895A-63B2B85C6909}
 		{3F094F95-C6ED-4562-B976-6B5FBB568295} = {C0459CD6-0305-4671-BA3C-66A391F6D47C}
+		{CD67FDC3-2362-408D-8048-4B855BB9776E} = {C0459CD6-0305-4671-BA3C-66A391F6D47C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F3CB0910-00C8-439B-8A1D-E7C4F7DD0190}

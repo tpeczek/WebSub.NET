@@ -10,7 +10,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.1.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.Abstractions\WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.Abstractions.csproj" />
     <ProjectReference Include="..\..\src\WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.EntityFrameworkCore\WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\..\src\WebSub.AspNetCore.WebHooks.Receivers.Subscriber\WebSub.AspNetCore.WebHooks.Receivers.Subscriber.csproj" />
     <ProjectReference Include="..\..\src\WebSub.Net.Http.Subscriber\WebSub.Net.Http.Subscriber.csproj" />

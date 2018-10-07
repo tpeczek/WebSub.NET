@@ -6,6 +6,7 @@ using WebSub.Net.Http.Subscriber;
 using WebSub.Net.Http.Subscriber.Discovery;
 using WebSub.WebHooks.Receivers.Subscriber;
 using WebSub.WebHooks.Receivers.Subscriber.Services;
+using WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Extensions;
 using Demo.AspNetCore.WebSub.Subscriber.Model;
 
 namespace Demo.AspNetCore.WebSub.Subscriber.Controllers
@@ -42,6 +43,8 @@ namespace Demo.AspNetCore.WebSub.Subscriber.Controllers
             try
             {
                 webSubSubscription = await _webSubSubscriptionsStore.CreateAsync();
+                webSubSubscription.CallbackUrl = Request.GetWebSubWebHookUrl(webSubSubscription.Id);
+
                 WebSubSubscribeParameters webSubSubscribeParameters = new WebSubSubscribeParameters(subscribeViewModel.Url, webSubSubscription.CallbackUrl)
                 {
                     OnDiscoveredAsync = async (WebSubDiscoveredUrls discovery, CancellationToken cancellationToken) =>

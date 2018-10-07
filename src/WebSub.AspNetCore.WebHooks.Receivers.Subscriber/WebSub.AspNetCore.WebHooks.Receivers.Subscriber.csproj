@@ -30,7 +30,6 @@
     <!--<PackageReference Include="WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.Abstractions" Version="1.0.0-preview2" />-->
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.Abstractions\WebSub.AspNetCore.WebHooks.Receivers.Subscriber.Services.Abstractions.csproj" />
     <ProjectReference Include="..\WebSub.WebHooks.Receivers.Subscriber.Abstractions\WebSub.WebHooks.Receivers.Subscriber.Abstractions.csproj" />
   </ItemGroup>
 </Project>
