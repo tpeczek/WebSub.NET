@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Description>WebSub.Net.Http.Subscriber is a library which provides a WebSub subscriber.</Description>
     <Tags>net websub subscriber</Tags>
-    <Copyright>Copyright © 2018 Tomasz Pęczek</Copyright>
+    <Copyright>Copyright © 2018 - 2019 Tomasz Pęczek</Copyright>
     <VersionPrefix>1.0.0-preview2</VersionPrefix>
     <Authors>Tomasz Pęczek</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
