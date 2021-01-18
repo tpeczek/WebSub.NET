@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Description>WebSub subscriber receiver WebHooks abstractions.</Description>
     <Tags>net webhook receiver websub subscriber</Tags>
-    <Copyright>Copyright © 2018 - 2020 Tomasz Pęczek</Copyright>
+    <Copyright>Copyright © 2018 - 2021 Tomasz Pęczek</Copyright>
     <VersionPrefix>1.0.0-preview2</VersionPrefix>
     <Authors>Tomasz Pęczek</Authors>
     <TargetFrameworks>netstandard1.0;netstandard2.0</TargetFrameworks>

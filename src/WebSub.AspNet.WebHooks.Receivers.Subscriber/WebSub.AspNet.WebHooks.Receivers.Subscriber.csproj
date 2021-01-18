@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Description>ASP.NET WebSub subscriber receiver WebHooks infrastructure. Contains the WebSubWebHookReceiver class.</Description>
     <Tags>aspnet webhook receiver websub subscriber</Tags>
-    <Copyright>Copyright © 2018 - 2020 Tomasz Pęczek</Copyright>
+    <Copyright>Copyright © 2018 - 2021 Tomasz Pęczek</Copyright>
     <VersionPrefix>1.0.0-preview2</VersionPrefix>
     <Authors>Tomasz Pęczek</Authors>
     <TargetFramework>net45</TargetFramework>

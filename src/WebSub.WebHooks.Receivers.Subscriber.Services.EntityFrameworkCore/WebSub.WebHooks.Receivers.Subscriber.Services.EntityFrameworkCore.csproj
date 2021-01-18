@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Description>WebSub subscriber receiver WebHooks services implementation that uses Entity Framework Core.</Description>
     <Tags>entityframeworkcore webhook receiver websub subscriber</Tags>
-    <Copyright>Copyright © 2018 - 2020 Tomasz Pęczek</Copyright>
+    <Copyright>Copyright © 2018 - 2021 Tomasz Pęczek</Copyright>
     <VersionPrefix>1.0.0-preview2</VersionPrefix>
     <Authors>Tomasz Pęczek</Authors>
     <TargetFramework>netstandard2.0</TargetFramework>
